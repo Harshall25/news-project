@@ -1,9 +1,32 @@
-import Image from "next/image";
+"use client"
+import { signOut, signIn, SessionProvider, useSession } from "next-auth/react"
 
-export default function Home() {
+export default function RealHome() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      THis is Home page
+    <SessionProvider>
+      <Home />
+    </SessionProvider>
+  )
+}
+
+function Home() {
+  const { data: session, status } = useSession()
+
+  if (status === "loading") return <div>Loading...</div>
+
+  if (!session) {
+    return (
+      <div>
+        Not logged in
+        <button onClick={() => signIn()}>Signin</button>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      Logged in as {session.user?.email}
+      <button onClick={() => signOut()}>Logout</button>
     </div>
-  );
+  )
 }
