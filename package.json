@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "echo \"No tests yet\""
   },
   "dependencies": {
     "next": "16.1.6",
@@ -27,4 +28,6 @@
   "overrides": {
     "flatted": "^3.4.0"
   }
+  
+
 }
