@@ -10,6 +10,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
+    "@prisma/client": "^6.19.2",
     "next": "16.1.6",
     "next-auth": "^4.24.13",
     "react": "19.2.3",
@@ -22,12 +23,11 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "prisma": "^6.19.2",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
   "overrides": {
     "flatted": "^3.4.0"
   }
-  
-
 }
