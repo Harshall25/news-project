@@ -29,7 +29,7 @@ export const POST = async (req: NextRequest) => {
     })
 
     return NextResponse.json({ message: "User created", user: { id: user.id, email: user.email } })
-  } catch (error) {
+  } catch (error:any) {
     console.error("Register error:", error)
     return NextResponse.json({ error: "Internal server error", details: error.message }, { status: 500 })
   }
