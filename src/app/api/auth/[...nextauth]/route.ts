@@ -1,8 +1,18 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { prisma } from "@/lib/prisma"
+import bcrypt from "bcryptjs"
 
 const handler =  NextAuth({
+  adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: "/login",
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
@@ -21,18 +31,29 @@ const handler =  NextAuth({
 
         const { email, password } = credentials
 
-        if (email === "admin@test.com" && password === "123456") {
-          return {
-            id: "1",
-            name: "Admin",
-            email: "admin@test.com"
-          }
-        }
+        console.log("Authorize called with", email)
 
-        return null
+        const user = await prisma.user.findUnique({
+          where: { email }
+        })
+
+        console.log("User found:", user ? "yes" : "no")
+
+        if (!user || !user.password) return null
+
+        const isValid = await bcrypt.compare(password, user.password)
+        console.log("Password valid:", isValid)
+
+        if (!isValid) return null
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email
+        }
       }
     })
-  ]
+  ],
 })
 
 export const GET = handler
