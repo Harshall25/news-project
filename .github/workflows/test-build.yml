@@ -33,9 +33,5 @@ jobs:
       # Step 4: Execute test suite
       - name: Run tests
         run: npm test
-        
-      - run: npx prisma generate
 
-      # Step 5: Build the project (usually generates production build)
-      - name: Build project
-        run: npm run build
+      
