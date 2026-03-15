@@ -1,9 +1,5 @@
-// *** Purpose : Gets the articles from the database , 
-//which was stored in db by cron jobs. 
-//get articles , paginated.
-//3. apply cron job scheduled api call to job endpoint 
-//    (this created in the api/jobs/route.ts)
-
+//1. fetched news from the api 
+//2. remaining to insert in db
 import axios from "axios"
 import { NextResponse } from "next/server"
 
@@ -23,8 +19,6 @@ export async function GET() {
     })
 
     const articles = res.data;
-
-    
 
     return NextResponse.json({ articles })
   } catch (error: any) {
