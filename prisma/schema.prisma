@@ -70,10 +70,17 @@ model Article {
   source      String
   url         String    @unique
   publishedAt DateTime
-  content     String    // full article text
+  content     String
   sentiment   String    // positive, negative, neutral
+  category    String?   // 👈 new field (optional)
   upvotes     Upvote[]
   createdAt   DateTime  @default(now())
+  imageUrl   String?   // URL of the article's main image
+
+  @@index([publishedAt(sort: Desc)])
+  @@index([sentiment])
+  @@index([category])   // optional but good for performance
+  @@map("articles")
 }
 
 model Upvote {

@@ -1,36 +1,50 @@
-// *** Purpose : Gets the articles from the database , 
-//which was stored in db by cron jobs. 
-//get articles , paginated.
-//3. apply cron job scheduled api call to job endpoint 
-//    (this created in the api/jobs/route.ts)
+import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
+//fetches news articles from the db
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const page = parseInt(searchParams.get('page') || '1');
+  const limit = parseInt(searchParams.get('limit') || '20');
+  const sentiment = searchParams.get('sentiment');
+  const category = searchParams.get('category');
+  const search = searchParams.get('q');
 
-import axios from "axios"
-import { NextResponse } from "next/server"
+  const where: any = {};
+  if (sentiment) where.sentiment = sentiment;
+  if (category) where.category = category;
+  if (search) {
+    where.title = { contains: search, mode: 'insensitive' };
+  }
 
-const url = "https://api.worldnewsapi.com/top-news?source-country=in"
-
-export async function GET() {
   try {
-    const res = await axios.get(url, {
-      headers: {
-        "x-api-key": process.env.NEWS_API as string
-      },
-      params: {
-        language: "en",
-        number: 20,
-        offset: 0
-      }
-    })
+    const [articles, total] = await Promise.all([
+      prisma.article.findMany({
+        where,
+        orderBy: { publishedAt: "desc" },
+        skip: (page - 1) * limit,
+        take: limit,
+        include: {
+          _count: { select: { upvotes: true } }
+        }
+      }),
+      prisma.article.count({ where })
+    ]);
 
-    const articles = res.data;
+    if (!articles || articles.length === 0) {
+      return NextResponse.json({ message: "No articles fetched", articles: [] });
+    }
 
-    
-
-    return NextResponse.json({ articles })
+    return NextResponse.json({
+      articles,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    });
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.response?.data || "API error" },
+      { error: error.message },
       { status: 500 }
-    )
+    );
   }
 }

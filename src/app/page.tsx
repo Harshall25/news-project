@@ -1,12 +1,15 @@
 "use client"
-
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { useSession, signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import HomePage from "../components/HomePage"
 
 export default function Home() {
-  const { data: session, status } = useSession()
-  const router = useRouter()
+    const [latestortrend , setLatestortrend] = useState(String);
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -18,12 +21,27 @@ export default function Home() {
 
   if (!session) return null // Will redirect
 
+
+
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="">
       <div>
         <h1>Welcome, {session.user?.email}</h1>
-        <button onClick={() => signOut()}>Logout</button>
+        <Button variant="destructive" onClick={() => signOut()}>Logout</Button>
       </div>
+
+    <div>
+      <Button variant="outline" onClick={()=>setLatestortrend("latest")}>Latest News</Button> 
+      <Button variant="outline" onClick={()=>setLatestortrend("top")}>Top News</Button>
+
+    </div>
+      
+      {latestortrend == "top" ? 
+        (<div>this is trending seciton</div>): 
+        (<div><HomePage /></div>)
+        
+      }
     </div>
   )
 }
+
