@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
     where.title = { contains: search, mode: 'insensitive' };
   }
 
+  
   try {
     const [articles, total] = await Promise.all([
       prisma.article.findMany({

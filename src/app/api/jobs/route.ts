@@ -24,8 +24,11 @@ export async function GET() {
       return NextResponse.json({ message: "No articles fetched" });
     }
 
+    //filter articles with positive sentiment only
+    const filteredArticles = articles.filter((item:any) => item.sentiment>0);
+
     // Format data
-    const formatted = articles.map((a: any) => ({
+    const formatted = filteredArticles.map((a: any) => ({
       title: a.title,
       source: new URL(a.url).hostname,
       url: a.url,
@@ -37,13 +40,13 @@ export async function GET() {
       imageUrl:a.image || null,
     }));
 
-    // Insert into database
+    //Insert into database
     await prisma.article.createMany({
       data: formatted,
       skipDuplicates: true,
     });
 
-    return NextResponse.json({ success: true,articles });
+    return NextResponse.json({ success: true,formatted});
   } catch (error: any) {
     console.error("Cron job failed:", error);
 
