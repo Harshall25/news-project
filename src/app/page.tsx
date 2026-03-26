@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import HomePage from "../components/HomePage"
 
 export default function Home() {
-    const [latestortrend , setLatestortrend] = useState(String);
+    const [latestOrTrend , setLatestortrend] = useState(String);
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -30,17 +30,11 @@ export default function Home() {
         <Button variant="destructive" onClick={() => signOut()}>Logout</Button>
       </div>
 
-    <div>
-      <Button variant="outline" onClick={()=>setLatestortrend("latest")}>Latest News</Button> 
-      <Button variant="outline" onClick={()=>setLatestortrend("top")}>Top News</Button>
-
-    </div>
+    
       
-      {latestortrend == "top" ? 
-        (<div>this is trending seciton</div>): 
-        (<div><HomePage /></div>)
-        
-      }
+      
+    <div><HomePage latestOrTrend={latestOrTrend} 
+        setLatestortrend={setLatestortrend} /></div>
     </div>
   )
 }
