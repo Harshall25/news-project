@@ -16,7 +16,8 @@ interface ArticleCardProps{
         source:string;
         publishedAt:string;
         category:string;
-        imageUrl :string;
+        imageUrl :string,
+        image?:string,
         _count : { upvotes: number };
     }
 }
@@ -26,7 +27,7 @@ export default function ArticleCard({article}:ArticleCardProps){
       <Card className="relative mx-auto w-full max-w-sm pt-0">
       <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
       <img
-        src={article.imageUrl}
+        src={article.imageUrl || article.image}
         alt="Event cover"
         className="relative z-20 aspect-video w-full object-cover "
       />

@@ -13,7 +13,7 @@ export const GET = async () => {
     const currentDate = new Date(); // curr date
     const response = await axios.get(url, {
       params: {
-        'source-country': 'IN',
+        'source-country': 'US',
         'api-key': process.env.NEWS_API,
         language: 'en',
         date: formatDateISO(currentDate), //use fns

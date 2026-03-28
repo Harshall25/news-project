@@ -14,14 +14,13 @@ export default function HomePage({ latestOrTrend, setLatestortrend }: any) {
 
     let res;
 
-    if (latestOrTrend === "latest") {
+    if (latestOrTrend === false) {
       res = await axios.get(`${baseUrl}/api/articles?page=1&limit=20`);
       setArticles(res.data.articles);
     } else {
       res = await axios.get(`${baseUrl}/api/trending`);
       setArticles(res.data.articles)
     }
-    
   };
 
   fetchArticles();
@@ -30,8 +29,8 @@ export default function HomePage({ latestOrTrend, setLatestortrend }: any) {
   return (
     <div>
       <div>
-      <Button variant="outline" onClick={()=>setLatestortrend("latest")}>Latest News</Button> 
-      <Button variant="outline" onClick={()=>setLatestortrend("top")}>Top News</Button>
+      <Button variant="outline" onClick={()=>setLatestortrend(false)}>Latest News</Button> 
+      <Button variant="outline" onClick={()=>setLatestortrend(true)}>Top News</Button>
     <main className="container mx-auto py-8">
       {latestOrTrend ? <h1 className="text-3xl font-bold mb-6">Top News</h1>
                       : <h1 className="text-3xl font-bold mb-6">Latest News</h1>}

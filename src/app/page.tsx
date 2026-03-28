@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import HomePage from "../components/HomePage"
 
 export default function Home() {
-    const [latestOrTrend , setLatestortrend] = useState(String);
+    const [latestOrTrend , setLatestortrend] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -32,7 +32,7 @@ export default function Home() {
 
     
       
-      
+
     <div><HomePage latestOrTrend={latestOrTrend} 
         setLatestortrend={setLatestortrend} /></div>
     </div>

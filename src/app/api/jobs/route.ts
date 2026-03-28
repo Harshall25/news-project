@@ -46,7 +46,7 @@ export async function GET() {
       skipDuplicates: true,
     });
 
-    return NextResponse.json({ success: true,formatted});
+    return NextResponse.json({ success: true,message :"successfull fetched"});
   } catch (error: any) {
     console.error("Cron job failed:", error);
 
