@@ -1,6 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
+import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
-//suth middle ware protectued routes
-export default function middleware(req: NextRequest) {
-  return NextResponse.next();
-}
+export default withAuth(
+  function middleware(req) {
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token,
+    },
+    pages: {
+      signIn: "/login", // only used for pages, not APIs
+    },
+  }
+);
+
+export const config = {
+  matcher: [
+    "/api/trending/:path*",
+    "/api/jobs/:path*",
+    "/api/articles/:path*",
+    "/api/article/:path*",
+  ],
+};
