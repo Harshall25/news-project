@@ -1,15 +1,29 @@
 // get trending
+import client from "@/lib/redis";
 import axios from "axios"
 import { Key } from "lucide-react";
 import { NextResponse } from "next/server";
+import { cache } from "react";
 export const GET = async () => {
 
+  const cacheKey = "trendingNews";
+
+  try{
+    const cached = await client.get(cacheKey);
+    if(cached){
+      return NextResponse.json(JSON.parse(cached));
+    }
+  }catch(cacheError:any){
+    console.error("Redis write failed:", cacheError?.message || cacheError);
+  }
+  
   try {
     const url = "https://api.worldnewsapi.com/top-news";
     //format date
     const formatDateISO = (date: any) => {
       return date.toLocaleDateString('en-CA');
     };
+
     const currentDate = new Date(); // curr date
     const response = await axios.get(url, {
       params: {
@@ -30,10 +44,19 @@ export const GET = async () => {
     const result = filteredNews.slice(0, 20); //limiting the response
     const count = result.length;
 
-    return NextResponse.json({
-      articles: result,   // ✅ same key
+    const resul = {
+      articles: result,
       count: result.length
-    });
+    }
+
+    //enter in the cache
+    try {
+      await client.setEx(cacheKey, 300, JSON.stringify(resul));
+    } catch (cacheError: any) {
+      console.error("Redis write failed:", cacheError?.message || cacheError);
+    }
+
+    return NextResponse.json(resul);
   } catch (e: any) {
     if (e.response) {
       return NextResponse.json({
