@@ -5,9 +5,10 @@ import { useSession, signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import HomePage from "../components/HomePage"
+import NavBar from "../components/NavBar"
 
 export default function Home() {
-    const [latestOrTrend , setLatestortrend] = useState(false);
+  const [latestOrTrend, setLatestortrend] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -21,19 +22,10 @@ export default function Home() {
 
   if (!session) return null // Will redirect
 
-
-
   return (
     <div className="">
-      <div>
-        <h1>Welcome, {session.user?.email}</h1>
-        <Button variant="destructive" onClick={() => signOut()}>Logout</Button>
-      </div>
-
-    
-      
-
-    <div><HomePage latestOrTrend={latestOrTrend} 
+      <NavBar />
+      <div><HomePage latestOrTrend={latestOrTrend}
         setLatestortrend={setLatestortrend} /></div>
     </div>
   )

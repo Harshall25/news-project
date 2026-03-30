@@ -39,6 +39,7 @@ export async function GET() {
       category: a.categories?.[0] || "general",
       imageUrl:a.image || null,
     }));
+    
 
     //Insert into database
     await prisma.article.createMany({
@@ -46,7 +47,7 @@ export async function GET() {
       skipDuplicates: true,
     });
 
-    return NextResponse.json({ success: true,message :"successfull fetched"});
+    return NextResponse.json({ success: true,formatted});
   } catch (error: any) {
     console.error("Cron job failed:", error);
 
