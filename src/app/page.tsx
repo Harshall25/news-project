@@ -24,7 +24,6 @@ export default function Home() {
 
   return (
     <div className="">
-      <NavBar />
       <div><HomePage latestOrTrend={latestOrTrend}
         setLatestortrend={setLatestortrend} /></div>
     </div>

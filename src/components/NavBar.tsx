@@ -11,7 +11,7 @@ export default function NavBar() {
     return (
         <div className="navbar bg-base-100 shadow-sm flex min-h-15  justify-center items-center">
             <div className="flex-2 ml-8">
-                <a className="btn btn-ghost text-xl cursor-pointer ">News App</a>
+                <a className="btn btn-ghost text-xl cursor-pointer " onClick={()=> router.push("/")}>News App</a>
             </div>
             <div className="flex mr-4">
                 <ul className="menu menu-horizontal px-1 flex justify-center items-center gap-4">
