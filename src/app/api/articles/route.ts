@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
     if (!articles || articles.length === 0) {
       return NextResponse.json({ message: "No articles fetched", articles: [] });
     }
-    
+
     const result = {
       articles,
       total,

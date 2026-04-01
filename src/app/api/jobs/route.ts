@@ -10,10 +10,11 @@ export async function GET() {
     const res = await axios.get(url, {
       params: {
         "api-key": process.env.NEWS_API,
-        "source-country": "IN",
+        "source-country": "US",
         language: "en",
         number: 100,
         offset: 0,
+        categories: "sports,business,technology,entertainment,science,lifestyle,travel,culture,education,environment,health,other,politics"
       },
     });
 
@@ -24,11 +25,29 @@ export async function GET() {
       return NextResponse.json({ message: "No articles fetched" });
     }
 
-    //filter articles with positive sentiment only
-    const filteredArticles = articles.filter((item:any) => item.sentiment>0);
+    const normalizedCategory = (article: any) => {
+      const rawCategory = article.category ?? (Array.isArray(article.categories) ? article.categories[0] : article.categories);
+      if (typeof rawCategory !== "string" || rawCategory.trim().length === 0) {
+        return "general";
+      }
+      return rawCategory.trim().toLowerCase();
+    };
 
+    // filter articles with positive sentiment and exclude politics
+    const filteredArticles = articles.filter((item: any) =>
+      item.sentiment > 0 && normalizedCategory(item) !== "politics"
+    );
     // Format data
-    const formatted = filteredArticles.map((a: any) => ({
+    const formatted: Array<{
+      title: string;
+      source: string;
+      url: string;
+      publishedAt: Date;
+      content: string;
+      sentiment: string;
+      category: string;
+      imageUrl: string | null;
+    }> = filteredArticles.map((a: any) => ({
       title: a.title,
       source: new URL(a.url).hostname,
       url: a.url,
@@ -36,18 +55,30 @@ export async function GET() {
       content: a.text,
       sentiment:
         a.sentiment > 0 ? "positive" : a.sentiment < 0 ? "negative" : "neutral",
-      category: a.categories?.[0] || "general",
-      imageUrl:a.image || null,
+      category: normalizedCategory(a),
+      imageUrl: a.image || null,
     }));
-    
 
-    //Insert into database
-    await prisma.article.createMany({
-      data: formatted,
-      skipDuplicates: true,
-    });
+    // Upsert by url so existing rows get refreshed category/content values.
+    await Promise.all(
+      formatted.map((article) =>
+        prisma.article.upsert({
+          where: { url: article.url },
+          update: {
+            title: article.title,
+            source: article.source,
+            publishedAt: article.publishedAt,
+            content: article.content,
+            sentiment: article.sentiment,
+            category: article.category,
+            imageUrl: article.imageUrl,
+          },
+          create: article,
+        })
+      )
+    );
 
-    return NextResponse.json({ success: true,formatted});
+    return NextResponse.json({ success: true, formatted});
   } catch (error: any) {
     console.error("Cron job failed:", error);
 

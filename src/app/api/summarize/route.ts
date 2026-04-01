@@ -35,7 +35,6 @@ export async function POST(req: Request) {
 
     const result = await model.generateContent(prompt);
     const summary = result.response.text();
-    console.log(summary);
     return NextResponse.json({ summary });
 
   } catch (e: any) {

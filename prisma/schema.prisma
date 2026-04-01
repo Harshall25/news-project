@@ -73,7 +73,6 @@ model Article {
   content     String
   sentiment   String    // positive, negative, neutral
   category    String?   // 👈 new field (optional)
-  upvotes     Upvote[]
   createdAt   DateTime  @default(now())
   imageUrl   String?   // URL of the article's main image
 
