@@ -13,8 +13,8 @@ export async function GET() {
         "source-country": "US",
         language: "en",
         number: 100,
-        offset: 0,
-        categories: "sports,business,technology,entertainment,science,lifestyle,travel,culture,education,environment,health,other,politics"
+        offset: 5,
+        categories: "sports,business,technology,entertainment,science,travel,culture,education,environment,health,politics"
       },
     });
 
@@ -35,7 +35,7 @@ export async function GET() {
 
     // filter articles with positive sentiment and exclude politics
     const filteredArticles = articles.filter((item: any) =>
-      item.sentiment > 0 && normalizedCategory(item) !== "politics"
+      item.sentiment > 0
     );
     // Format data
     const formatted: Array<{

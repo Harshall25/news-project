@@ -11,11 +11,11 @@
 
 ### Implemented
 - implemented caching
-- for /api/articles endpoint : 89% response time reduced
+- for /api/articles endpoint : 90% response time reduced
 - for /api/trending endpoint : 94.5% response time reduece
 
 ### Issues
-- without redis fetching articles from the db takes 2.1s to 1600ms 
+- without redis fetching articles from the db takes 2.1s to 2000ms+ 
 - impvoement can be made by using the redis
 - faced multiple errors , because not try catch usesd in multiple code parts.
 

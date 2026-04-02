@@ -23,14 +23,14 @@ export default function NavBar() {
 
             {/* Center */}
             <div className="flex-1 flex justify-center">
-                <Tabs defaultValue="overview">
+                {
+                    status ==="authenticated" ? <Tabs defaultValue="overview">
                     <TabsList variant="line">
-                        
                         <TabsTrigger 
-                            value="technology" 
-                            onClick={() => router.push('/?category=technology')}
+                            value="lifestyle" 
+                            onClick={() => router.push('/?category=general')}
                         >
-                            Technology
+                            General
                         </TabsTrigger>
                         <TabsTrigger 
                             value="entertainment" 
@@ -39,10 +39,22 @@ export default function NavBar() {
                             Entertainment
                         </TabsTrigger>
                         <TabsTrigger 
-                            value="lifestyle" 
-                            onClick={() => router.push('/?category=lifestyle')}
+                            value="sports" 
+                            onClick={() => router.push('/?category=sports')}
                         >
-                            Lifestyle
+                            Sports
+                        </TabsTrigger>
+                        <TabsTrigger 
+                            value="business" 
+                            onClick={() => router.push('/?category=business')}
+                        >
+                            Business
+                        </TabsTrigger>
+                        <TabsTrigger 
+                            value="technology" 
+                            onClick={() => router.push('/?category=technology')}
+                        >
+                            Technology
                         </TabsTrigger>
                         <TabsTrigger 
                             value="travel" 
@@ -62,20 +74,10 @@ export default function NavBar() {
                         >
                             Politics
                         </TabsTrigger>
-                        <TabsTrigger 
-                            value="sports" 
-                            onClick={() => router.push('/?category=sports')}
-                        >
-                            Sports
-                        </TabsTrigger>
-                        <TabsTrigger 
-                            value="business" 
-                            onClick={() => router.push('/?category=business')}
-                        >
-                            Business
-                        </TabsTrigger>
                     </TabsList>
-                </Tabs>
+                </Tabs> : <div>Stay positive with curated news, AI summaries, and clean tagging.</div>
+                }
+                
             </div>
 
             {/* Right */}

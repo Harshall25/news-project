@@ -70,12 +70,20 @@ export default function Page() {
     </div>
   }
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.replace("/");
+    }
+  };
+
 
 
   return (
     <div>
 
-      <Button onClick={()=> router.push("/")} variant="outline" className=" fixed bottom-5 left-25 ml-3 px-5 py-4 bg-black text-white rounded-lg shadow-lg">
+      <Button onClick={handleBack} variant="outline" className=" fixed bottom-5 left-25 ml-3 px-5 py-4 bg-black text-white rounded-lg shadow-lg">
         <ArrowLeftIcon />
         Back
       </ Button>

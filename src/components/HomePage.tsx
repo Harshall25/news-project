@@ -42,7 +42,9 @@ export default function HomePage({ latestOrTrend, setLatestortrend }: any) {
         let res;
 
         if (latestOrTrend === false) {
-          res = await axios.get(`/api/articles?page=1&limit=20${category ? `&category=${category}` : ''}`);        } else {
+          res = await axios.get(`/api/articles?page=1&limit=20${category ? `&category=${category}` : ''}`);        
+        } 
+        else {
           res = await axios.get(`/api/trending${category ? `?category=${category}` : ''}`);
         }
 
