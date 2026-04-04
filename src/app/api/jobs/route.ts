@@ -13,7 +13,7 @@ export async function GET() {
         "source-country": "US",
         language: "en",
         number: 100,
-        offset: 5,
+        offset: 0,
         categories: "sports,business,technology,entertainment,science,travel,culture,education,environment,health,politics"
       },
     });
