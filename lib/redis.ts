@@ -9,7 +9,7 @@ let client:any;
 
 if (!global.redis) {
   global.redis = createClient({
-    url: `redis://default:${process.env.REDIS_KEY}@redis-12635.crce283.ap-south-1-2.ec2.cloud.redislabs.com:12635`,
+    url: `redis://default:${process.env.REDIS_KEY}@spot-property-mirrored-54790.db.redis.io:13067`,
   });
 
   global.redis.on("error", (err) => {

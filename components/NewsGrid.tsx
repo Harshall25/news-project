@@ -10,7 +10,6 @@ interface NewsGridProps{
         publishedAt:string;
         category:string;
         imageUrl :string;
-        _count : { upvotes: number };
     }>
 }
 

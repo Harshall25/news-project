@@ -20,7 +20,6 @@ interface ArticleCardProps {
     category: string;
     imageUrl: string,
     image?: string,
-    _count: { upvotes: number };
   }
 }
 //article card component

@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI News App
 
-## Getting Started
+AI News App is a Next.js project that fetches news articles, stores them in PostgreSQL with Prisma, shows them in a feed, supports Google login, Redis caching, and AI article summaries.
 
-First, run the development server:
+## Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create a `.env` file in the project root and add these values:
+
+```env
+DATABASE_URL=
+NEXTAUTH_URL=
+NEXTAUTH_SECRET=
+GOOGLE_ID=
+GOOGLE_SECRET=
+GOOGLE_GEMINI_API=
+NEWS_API=
+REDIS_KEY=
+```
+
+3. Run the app locally:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Build for production:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## What the env values mean
 
-## Learn More
+- `DATABASE_URL`: PostgreSQL connection string.
+- `NEXTAUTH_URL`: Base URL of your app, such as `http://localhost:3000`.
+- `NEXTAUTH_SECRET`: A secret string used by NextAuth.
+- `GOOGLE_ID` and `GOOGLE_SECRET`: OAuth client ID and secret from Google Cloud.
+- `GOOGLE_GEMINI_API`: API key from Google AI Studio.
+- `NEWS_API`: API key from World News API.
+- `REDIS_KEY`: Password for the Redis instance used by the app.
 
-To learn more about Next.js, take a look at the following resources:
+## How to generate a secret key
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Use this command to create a strong secret for `NEXTAUTH_SECRET`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+openssl rand -base64 32
+```
 
-## Deploy on Vercel
+Copy the output into your `.env` file.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Notes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The app uses World News API for fetching news.
+- The app uses Redis for caching and session-related features.
+- Google login needs an OAuth client created in Google Cloud Console.
+- Gemini summaries need a key from Google AI Studio.

@@ -10,12 +10,22 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ error: "Email and password required" }, { status: 400 })
     }
 
-    const existingUser = await prisma.user.findUnique({
+    let existingUser = null
+
+    try {
+      existingUser = await prisma.user.findUnique({
       where: { email }
     })
+    } catch (error: any) {
+      console.error("Error checking existing user:", error)
+      return NextResponse.json(
+        { error: "Database unavailable", details: error.message },
+        { status: 503 }
+      )
+    }
 
     if (existingUser) {
-      return NextResponse.json({ error: "User already exists" }, { status: 400 })
+      return NextResponse.json({ error: "User already exists" }, { status: 409 })
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)

@@ -1,11 +1,11 @@
-// get trending
+import { fetchNews } from "../../../jobs/fetch-news";
 import client from "@/lib/redis";
-import axios from "axios"
-import { Key } from "lucide-react";
+import axios from "axios";
 import { NextResponse } from "next/server";
-import { cache } from "react";
+
 export const GET = async () => {
 
+  await fetchNews();
   const cacheKey = "trendingNews";
 
   try{

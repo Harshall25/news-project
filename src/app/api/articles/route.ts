@@ -42,9 +42,6 @@ export async function GET(request: NextRequest) {
         orderBy: { publishedAt: "desc"},
         skip: (page - 1) * limit,
         take: limit,
-        include: {
-          _count: { select: { upvotes: true } }
-        }
       }),
       prisma.article.count({ where })
     ]);
