@@ -1,27 +1,8 @@
-import { createClient } from "redis";
+import { Redis } from "@upstash/redis";
 
-declare global {
-  // allow global var in dev
-  var redis: ReturnType<typeof createClient> | undefined;
-}
-
-let client:any;
-
-if (!global.redis) {
-  global.redis = createClient({
-    url: `redis://default:${process.env.REDIS_KEY}@spot-property-mirrored-54790.db.redis.io:13067`,
-  });
-
-  global.redis.on("error", (err) => {
-    console.log("Redis Error", err);
-  });
-}
-
-client = global.redis;
-
-// connect only if not already connected
-if (!client.isOpen) {
-  await client.connect();
-}
+const client = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL || "",
+  token: process.env.UPSTASH_REDIS_REST_TOKEN || "",
+});
 
 export default client;

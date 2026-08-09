@@ -20,7 +20,8 @@ GOOGLE_ID=
 GOOGLE_SECRET=
 GOOGLE_GEMINI_API=
 NEWS_API=
-REDIS_KEY=
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
 ```
 
 3. Run the app locally:
@@ -43,7 +44,8 @@ npm run build
 - `GOOGLE_ID` and `GOOGLE_SECRET`: OAuth client ID and secret from Google Cloud.
 - `GOOGLE_GEMINI_API`: API key from Google AI Studio.
 - `NEWS_API`: API key from World News API.
-- `REDIS_KEY`: Password for the Redis instance used by the app.
+- `UPSTASH_REDIS_REST_URL`: The REST URL provided by Upstash Redis.
+- `UPSTASH_REDIS_REST_TOKEN`: The REST token provided by Upstash Redis.
 
 ## How to generate a secret key
 

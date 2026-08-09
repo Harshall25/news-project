@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
   try {
     const cached = await client.get(cacheKey); //get val from key
     if (cached) {
-      return NextResponse.json(JSON.parse(cached)); //return get value
+      return NextResponse.json(typeof cached === 'string' ? JSON.parse(cached) : cached); //return get value
     }
   } catch (cacheError: any) {
     console.error("Redis read failed:", cacheError?.message || cacheError);
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
 
     //cache in the redis with ttl of 300 seconds,
     try {
-      await client.setEx(cacheKey, 300, JSON.stringify(result));
+      await client.setex(cacheKey, 300, result);
     } catch (cacheError: any) {
       console.error("Redis write failed:", cacheError?.message || cacheError);
     }
