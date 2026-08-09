@@ -11,7 +11,7 @@ export const GET = async () => {
   try{
     const cached = await client.get(cacheKey);
     if(cached){
-      return NextResponse.json(JSON.parse(cached));
+      return NextResponse.json(typeof cached === 'string' ? JSON.parse(cached) : cached);
     }
   }catch(cacheError:any){
     console.error("Redis write failed:", cacheError?.message || cacheError);
@@ -51,7 +51,7 @@ export const GET = async () => {
 
     //enter in the cache
     try {
-      await client.setEx(cacheKey, 300, JSON.stringify(resul));
+      await client.setex(cacheKey, 300, resul);
     } catch (cacheError: any) {
       console.error("Redis write failed:", cacheError?.message || cacheError);
     }
