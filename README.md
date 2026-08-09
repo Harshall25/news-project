@@ -63,3 +63,10 @@ Copy the output into your `.env` file.
 - The app uses Redis for caching and session-related features.
 - Google login needs an OAuth client created in Google Cloud Console.
 - Gemini summaries need a key from Google AI Studio.
+
+## Deployment & Cron Jobs
+
+This app uses a scheduled background job to fetch news 6 times a day (every 4 hours).
+
+- **Vercel Deployments**: No extra setup required. Vercel automatically reads `vercel.json` and runs the cron job in the background.
+- **Azure / VPS / Docker**: You must run the cron script alongside your web server. In your environment, start the background worker process using: `npm run cron`. Make sure `NEXTAUTH_URL` is set in your environment variables (e.g., `NEXTAUTH_URL=https://your-production-domain.com`) so the cron script knows which URL to target.
