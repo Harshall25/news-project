@@ -1,11 +1,14 @@
 import axios from "axios";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+// @ts-ignore
+import { WorldNewsArticle } from "@/src/types";
 
 const url = "https://api.worldnewsapi.com/search-news";
 
 export async function fetchNews() {
   const res = await axios.get(url, {
+    timeout: 10000,
     params: {
       "api-key": process.env.NEWS_API,
       "source-country": "US",
@@ -23,7 +26,7 @@ export async function fetchNews() {
     return [];
   }
 
-  const normalizedCategory = (article: any) => {
+  const normalizedCategory = (article: WorldNewsArticle) => {
     const rawCategory =
       article.category ??
       (Array.isArray(article.categories) ? article.categories[0] : article.categories);
@@ -33,7 +36,7 @@ export async function fetchNews() {
     return rawCategory.trim().toLowerCase();
   };
 
-  const filteredArticles = articles.filter((item: any) => item.sentiment > 0);
+  const filteredArticles = articles.filter((item: WorldNewsArticle) => item.sentiment > 0);
 
   const formatted: Array<{
     title: string;
@@ -44,11 +47,11 @@ export async function fetchNews() {
     sentiment: string;
     category: string;
     imageUrl: string | null;
-  }> = filteredArticles.map((a: any) => ({
+  }> = filteredArticles.map((a: WorldNewsArticle) => ({
     title: a.title,
     source: new URL(a.url).hostname,
     url: a.url,
-    publishedAt: new Date(a.publish_date),
+    publishedAt: a.publish_date ? new Date(a.publish_date) : new Date(),
     content: a.text,
     sentiment:
       a.sentiment > 0 ? "positive" : a.sentiment < 0 ? "negative" : "neutral",
@@ -86,25 +89,26 @@ export async function handleFetchNewsRequest() {
     }
 
     return NextResponse.json({ success: true, formatted });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Cron job failed:", error);
 
-    if (error.response) {
-      return NextResponse.json(
-        { error: error.response.data },
-        { status: error.response.status }
-      );
-    }
-
-    if (error.request) {
-      return NextResponse.json(
-        { error: "No response from World News API" },
-        { status: 503 }
-      );
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        return NextResponse.json(
+          { error: error.response.data },
+          { status: error.response.status }
+        );
+      }
+      if (error.request) {
+        return NextResponse.json(
+          { error: "No response from World News API" },
+          { status: 503 }
+        );
+      }
     }
 
     return NextResponse.json(
-      { error: error.message },
+      { error: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

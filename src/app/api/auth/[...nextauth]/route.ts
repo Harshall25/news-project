@@ -31,18 +31,13 @@ const handler =  NextAuth({
 
         const { email, password } = credentials
 
-        console.log("Authorize called with", email)
-
         const user = await prisma.user.findUnique({
           where: { email }
         })
 
-        console.log("User found:", user ? "yes" : "no")
-
         if (!user || !user.password) return null
 
         const isValid = await bcrypt.compare(password, user.password)
-        console.log("Password valid:", isValid)
 
         if (!isValid) return null
 

@@ -3,9 +3,20 @@
   <component name="ChangeListManager">
     <list default="true" id="19580759-f902-4a34-ae9a-99ff31829175" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ArticleCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ArticleCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/NewsGrid.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/NewsGrid.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/articles/[id]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/articles/[id]/route.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/api/articles/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/articles/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/auth/[...nextauth]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/auth/[...nextauth]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/auth/register/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/auth/register/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/summarize/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/summarize/route.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/api/trending/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/trending/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/article/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/article/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/HomePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HomePage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jobs/fetch-news.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/jobs/fetch-news.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +42,8 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "fix/6-schedule-job",
+    "git-widget-placeholder": "fix/9-ts-interfaces",
+    "javascript.preferred.runtime.type.id": "node",
     "js.debugger.nextJs.config.created.client": "true",
     "js.debugger.nextJs.config.created.server": "true",
     "last_opened_file_path": "C:/Users/Harshal/.vscode/ai-news-app",
@@ -69,7 +81,7 @@
       <option name="presentableId" value="Default" />
       <updated>1786272524641</updated>
       <workItem from="1786272526802" duration="57000" />
-      <workItem from="1786272601548" duration="2063000" />
+      <workItem from="1786272601548" duration="6114000" />
     </task>
     <servers />
   </component>

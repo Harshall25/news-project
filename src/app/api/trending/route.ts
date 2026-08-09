@@ -24,6 +24,7 @@ export const GET = async () => {
 
     const currentDate = new Date(); // curr date
     const response = await axios.get(url, {
+      timeout: 10000,
       params: {
         'source-country': 'US',
         'api-key': process.env.NEWS_API,
