@@ -1,11 +1,9 @@
-import { fetchNews } from "../../../jobs/fetch-news";
 import client from "@/lib/redis";
 import axios from "axios";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {
 
-  await fetchNews();
   const cacheKey = "trendingNews";
 
   try{
@@ -41,34 +39,33 @@ export const GET = async () => {
 
     //filter with positive sentiment
     const filteredNews = newsArr.filter((item: any) => item.sentiment > 0);
-    const result = filteredNews.slice(0, 20); //limiting the response
-    const count = result.length;
+    const resultArticles = filteredNews.slice(0, 20); //limiting the response
 
-    const resul = {
-      articles: result,
-      count: result.length
+    const result = {
+      articles: resultArticles,
+      count: resultArticles.length
     }
 
     //enter in the cache
     try {
-      await client.setex(cacheKey, 300, resul);
+      await client.setex(cacheKey, 300, result);
     } catch (cacheError: any) {
       console.error("Redis write failed:", cacheError?.message || cacheError);
     }
 
-    return NextResponse.json(resul);
+    return NextResponse.json(result);
   } catch (e: any) {
     if (e.response) {
       return NextResponse.json({
         "error": e.response.data
-      })
+      }, { status: e.response.status || 500 })
     } else if (e.request) {
       return NextResponse.json({
-        "error": e.request.data
-      })
+        "error": e.request.data || "Network error"
+      }, { status: 503 })
     }
     return NextResponse.json({
-      "error": e.data
-    })
+      "error": e.message || String(e)
+    }, { status: 500 })
   }
 } 

@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     where.title = { contains: search, mode: 'insensitive' };
   }
  
-  //redis usage in endpoint 
+  //Redis usage in endpoint
   //1) set cache key.
   const cacheKey = `articles:page:${page}:limit:${limit}:sentiment:${sentiment || ''}:category:${category || ''}:q:${search || ''}`;
   try {
