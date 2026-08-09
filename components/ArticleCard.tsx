@@ -1,5 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
+import { Article } from "@/src/types"
 import {
   Card,
   CardAction,
@@ -11,16 +13,7 @@ import {
 import { useRouter } from "next/navigation"
 
 interface ArticleCardProps {
-  article: {
-    id: string;
-    title: string;
-    source: string;
-    url: string,
-    publishedAt: string;
-    category: string;
-    imageUrl: string,
-    image?: string,
-  }
+  article: Article;
 }
 //article card component
 export default function ArticleCard({ article }: ArticleCardProps) {
@@ -28,17 +21,21 @@ export default function ArticleCard({ article }: ArticleCardProps) {
   return <>
     <Card className="relative mx-auto w-full max-w-sm pt-0 transition-transform duration-500 ease-in-out hover:scale-102">
       <div className="absolute inset-0 z-30 aspect-video " />
-      <img
-        src={article.imageUrl || article.image}
-        alt="Event cover"
-        className="relative z-20 aspect-video w-full object-cover "
-      />
+      {article.imageUrl && (
+        <Image
+          src={article.imageUrl}
+          alt={article.title || "News article image"}
+          width={400}
+          height={225}
+          className="relative z-20 aspect-video w-full object-cover "
+        />
+      )}
       <CardHeader>
         <CardAction>
           <Badge variant="secondary">{article.category}</Badge>
         </CardAction>
         <CardTitle className="line-clamp-3 min-h-17.5">{article.title}</CardTitle>
-        <CardDescription>{new Date(article.publishedAt).toLocaleDateString()}</CardDescription>
+        <CardDescription>{article.publishedAt ? new Date(article.publishedAt).toLocaleDateString() : ""}</CardDescription>
       </CardHeader>
       <CardFooter>
         <div className="flex w-full flex-2">

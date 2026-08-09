@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import client from "@/lib/redis";
+import { Prisma } from "@prisma/client";
 
 //fetches news articles from the db
 
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get('category');
   const search = searchParams.get('q');
 
-  const where: any = {};
+  const where: Prisma.ArticleWhereInput = {};
   if (sentiment) where.sentiment = sentiment;
   if (category) where.category = category;
   if (search) {
@@ -30,8 +31,8 @@ export async function GET(request: NextRequest) {
     if (cached) {
       return NextResponse.json(typeof cached === 'string' ? JSON.parse(cached) : cached); //return get value
     }
-  } catch (cacheError: any) {
-    console.error("Redis read failed:", cacheError?.message || cacheError);
+  } catch (cacheError: unknown) {
+    console.error("Redis read failed:", cacheError instanceof Error ? cacheError.message : String(cacheError));
   }
 
   try {
@@ -61,20 +62,20 @@ export async function GET(request: NextRequest) {
     //cache in the redis with ttl of 300 seconds,
     try {
       await client.setex(cacheKey, 300, result);
-    } catch (cacheError: any) {
-      console.error("Redis write failed:", cacheError?.message || cacheError);
+    } catch (cacheError: unknown) {
+      console.error("Redis write failed:", cacheError instanceof Error ? cacheError.message : String(cacheError));
     }
 
     return NextResponse.json(result);
 
-  } catch(error:any) {
+  } catch(error: unknown) {
     return NextResponse.json({
       articles: [],
       total: 0,
       page,
       limit,
       totalPages: 0,
-      error: error.message
+      error: error instanceof Error ? error.message : String(error)
     }, { status: 500 })
   }
 }

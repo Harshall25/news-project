@@ -1,16 +1,9 @@
 import ArticleCard from "./ArticleCard";
 
+import { Article } from "@/src/types";
 
 interface NewsGridProps{
-    articles:Array<{
-        id:string;
-        title:string;
-        source:string;
-        url:string;
-        publishedAt:string;
-        category:string;
-        imageUrl :string;
-    }>
+    articles: Article[]
 }
 
 //maps each card with its own article data

@@ -16,10 +16,10 @@ export const POST = async (req: NextRequest) => {
       existingUser = await prisma.user.findUnique({
       where: { email }
     })
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error checking existing user:", error)
       return NextResponse.json(
-        { error: "Database unavailable", details: error.message },
+        { error: "Database unavailable", details: error instanceof Error ? error.message : String(error) },
         { status: 503 }
       )
     }
@@ -39,8 +39,8 @@ export const POST = async (req: NextRequest) => {
     })
 
     return NextResponse.json({ message: "User created", user: { id: user.id, email: user.email } })
-  } catch (error:any) {
+  } catch (error:unknown) {
     console.error("Register error:", error)
-    return NextResponse.json({ error: "Internal server error", details: error.message }, { status: 500 })
+    return NextResponse.json({ error: "Internal server error", details: error instanceof Error ? error.message : String(error) }, { status: 500 })
   }
 }

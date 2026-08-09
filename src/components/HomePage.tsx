@@ -26,9 +26,15 @@ function toErrorMessage(value: unknown): string {
 
   return String(value);
 }
+import { Article } from "@/src/types";
 
-export default function HomePage({ latestOrTrend, setLatestortrend }: any) {
-  const [articles, setArticles] = useState<any[]>([]);
+interface HomePageProps {
+  latestOrTrend: boolean;
+  setLatestortrend: (value: boolean) => void;
+}
+
+export default function HomePage({ latestOrTrend, setLatestortrend }: HomePageProps) {
+  const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
@@ -91,11 +97,15 @@ export default function HomePage({ latestOrTrend, setLatestortrend }: any) {
         setPage(1);
         setTotalPages(1);
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       if (!append) {
         setArticles([]);
       }
-      setError(toErrorMessage(e?.response?.data?.error ?? e?.message ?? e));
+      if (axios.isAxiosError(e)) {
+        setError(toErrorMessage(e.response?.data?.error ?? e.message));
+      } else {
+        setError(toErrorMessage(e instanceof Error ? e.message : String(e)));
+      }
     } finally {
       setLoading(false);
       setLoadingMore(false);
