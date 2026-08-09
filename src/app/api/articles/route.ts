@@ -36,7 +36,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    //if not cached then query db 
+    //if not cached then query db
+    // TODO : Remove this Promise.all
     const [articles, total] = await Promise.all([
       prisma.article.findMany({
         where,
