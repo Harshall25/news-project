@@ -1,30 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="19580759-f902-4a34-ae9a-99ff31829175" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ArticleCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ArticleCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/NewsGrid.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/NewsGrid.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/api/articles/[id]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/articles/[id]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/api/articles/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/articles/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/api/auth/[...nextauth]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/auth/[...nextauth]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/api/auth/register/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/auth/register/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/api/summarize/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/summarize/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/api/trending/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/trending/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/article/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/article/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/HomePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HomePage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jobs/fetch-news.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/jobs/fetch-news.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="74" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "aditya-bheke"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Harshall25/news-project.git",
+    "accountId": "209883e3-a4df-4578-8cbf-d4a09b3242f9"
+  }
+}]]></component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.3673326377965456" />
+      <entry key="MS500" value="3.2333799359135456" />
+      <entry key="S2" value="5.48029648828884" />
+      <entry key="S5" value="7.1396019670339586" />
+      <entry key="S10" value="9.059631435471266" />
+      <entry key="S30" value="11.79028196959043" />
+      <entry key="S60" value="12.802697168813207" />
+      <entry key="M2" value="13.37615322781768" />
+      <entry key="M5" value="13.744125758105106" />
+      <entry key="M10" value="13.870981929991343" />
+      <entry key="M15" value="13.913745852717225" />
+      <entry key="M30" value="13.956751400120435" />
+      <entry key="H1" value="13.978345228932394" />
+      <entry key="H2" value="13.989164985459162" />
+      <entry key="H4" value="13.994580584072866" />
+      <entry key="D1" value="13.999096498801604" />
+      <entry key="W1" value="13.999870921903721" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.2821982339172682" />
+      <entry key="MS500" value="3.1384913159750685" />
+      <entry key="S2" value="5.436948286533111" />
+      <entry key="S5" value="7.114357783056668" />
+      <entry key="S10" value="9.040920969724466" />
+      <entry key="S30" value="11.78090429337545" />
+      <entry key="S60" value="12.797408030568942" />
+      <entry key="M2" value="13.373337177604762" />
+      <entry key="M5" value="13.742955128340077" />
+      <entry key="M10" value="13.870388978042456" />
+      <entry key="M15" value="13.913348833851057" />
+      <entry key="M30" value="13.956552026741482" />
+      <entry key="H1" value="13.978245325283561" />
+      <entry key="H2" value="13.989114979272864" />
+      <entry key="H4" value="13.994555567373965" />
+      <entry key="D1" value="13.999092327460799" />
+      <entry key="W1" value="13.999870325951568" />
+    </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1,
@@ -38,17 +106,23 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "fix/9-ts-interfaces",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "fix/global-error-boundary",
+    "ignore.virus.scanning.warn.message": "true",
     "javascript.preferred.runtime.type.id": "node",
     "js.debugger.nextJs.config.created.client": "true",
     "js.debugger.nextJs.config.created.server": "true",
+    "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "C:/Users/Harshal/.vscode/ai-news-app",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Users\\Harshal\\.vscode\\ai-news-app\\node_modules\\typescript\\lib"
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "D:\\news-project\\node_modules\\typescript\\lib"
   }
 }]]></component>
   <component name="RunManager" selected="npm.Next.js: server-side">
@@ -82,10 +156,14 @@
       <updated>1786272524641</updated>
       <workItem from="1786272526802" duration="57000" />
       <workItem from="1786272601548" duration="6114000" />
+      <workItem from="1786445458058" duration="297000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
   </component>
 </project>
