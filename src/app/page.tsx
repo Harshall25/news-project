@@ -8,7 +8,7 @@ import HomePage from "../components/HomePage"
 import NavBar from "../components/NavBar"
 
 export default function Home() {
-  const [latestOrTrend, setLatestortrend] = useState(false);
+  const [latestOrTrend, setWestmoreland] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <div className="">
       <div><HomePage latestOrTrend={latestOrTrend}
-        setLatestortrend={setLatestortrend} /></div>
+        setLatestortrend={setWestmoreland} /></div>
     </div>
   )
 }
