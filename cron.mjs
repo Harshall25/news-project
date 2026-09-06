@@ -9,12 +9,21 @@ cron.schedule("0 */4 * * *", async () => {
   try {
     // Uses NEXTAUTH_URL as the base URL, defaults to localhost:3000
     const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/jobs`);
-    
+    const cronSecret = process.env.CRON_SECRET;
+    if (!cronSecret) {
+      throw new Error("CRON_SECRET is not configured");
+    }
+
+    const res = await fetch(`${baseUrl}/api/jobs`, {
+      headers: {
+        Authorization: "Bearer " + cronSecret,
+      },
+    });
+
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
-    
+
     const data = await res.json();
     console.log(`[${new Date().toISOString()}] Job finished successfully:`, data);
   } catch (error) {
