@@ -21,7 +21,7 @@ if (missingEnvs.length > 0) {
 }
 
 const nextConfig: NextConfig = {
-    reactStrictMode: false,
+    reactStrictMode: true,
     images: {
       unoptimized: true,
       remotePatterns: [
