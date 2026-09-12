@@ -4,9 +4,6 @@ interface LogContext {
   [key: string]: unknown
 }
 
-const isDevelopment = process.env.NODE_ENV === "development"
-const isProduction = process.env.NODE_ENV === "production"
-
 const sanitize = (context: LogContext): LogContext => {
   const sensitiveKeys = [
     "password",
@@ -55,6 +52,8 @@ const formatLog = (
     : ""
   return `[${timestamp}] [${level.toUpperCase()}] ${message}${contextStr}`
 }
+
+const isDevelopment = process.env.NODE_ENV === "development"
 
 export const logger = {
   debug: (message: string, context?: LogContext) => {

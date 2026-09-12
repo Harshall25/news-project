@@ -27,61 +27,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.5050887860738724" />
-      <entry key="MS500" value="3.24028118468566" />
-      <entry key="S2" value="7.2301913078119595" />
-      <entry key="S5" value="9.606100622146224" />
-      <entry key="S10" value="10.700804798069408" />
-      <entry key="S30" value="11.65702711438365" />
-      <entry key="S60" value="12.108065749847796" />
-      <entry key="M2" value="12.466703681739807" />
-      <entry key="M5" value="12.814212783439034" />
-      <entry key="M10" value="13.603286569606636" />
-      <entry key="M15" value="14.818478270352312" />
-      <entry key="M30" value="18.85079236218408" />
-      <entry key="H1" value="26.447683838243165" />
-      <entry key="H2" value="38.23612638089666" />
-      <entry key="H4" value="50.504315172122624" />
-      <entry key="D1" value="67.50056807721664" />
-      <entry key="W1" value="71.32990618875195" />
+      <entry key="MS100" value="1.4455711396778648" />
+      <entry key="MS500" value="3.171827443750838" />
+      <entry key="S2" value="5.4306867482096655" />
+      <entry key="S5" value="6.294301128746785" />
+      <entry key="S10" value="6.719404702171733" />
+      <entry key="S30" value="9.590335695802679" />
+      <entry key="S60" value="13.535960937019789" />
+      <entry key="M2" value="17.439656341065056" />
+      <entry key="M5" value="20.985209402114005" />
+      <entry key="M10" value="22.953387405769178" />
+      <entry key="M15" value="25.131574967041107" />
+      <entry key="M30" value="34.2703920813944" />
+      <entry key="H1" value="50.81879879741927" />
+      <entry key="H2" value="72.0625451240669" />
+      <entry key="H4" value="92.8852327876223" />
+      <entry key="D1" value="122.0902758271125" />
+      <entry key="W1" value="128.81658289418414" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="0.0" />
-      <entry key="S5" value="0.0" />
-      <entry key="S10" value="0.0" />
-      <entry key="S30" value="0.0" />
-      <entry key="S60" value="0.0" />
-      <entry key="M2" value="0.0" />
-      <entry key="M5" value="0.0" />
-      <entry key="M10" value="0.0" />
-      <entry key="M15" value="0.0" />
-      <entry key="M30" value="0.0" />
-      <entry key="H1" value="0.0" />
-      <entry key="H2" value="0.0" />
-      <entry key="H4" value="0.0" />
-      <entry key="D1" value="0.0" />
-      <entry key="W1" value="0.0" />
+      <entry key="MS500" value="7.643504452572397E-108" />
+      <entry key="S2" value="1.6627353525920632E-27" />
+      <entry key="S5" value="1.942357882066318E-11" />
+      <entry key="S10" value="4.40721894403525E-6" />
+      <entry key="S30" value="0.016395382082853925" />
+      <entry key="S60" value="0.12804489125318813" />
+      <entry key="M2" value="0.35876862231536893" />
+      <entry key="M5" value="0.7561086453292564" />
+      <entry key="M10" value="1.2527543286933118" />
+      <entry key="M15" value="1.627994933763388" />
+      <entry key="M30" value="2.3245130685210595" />
+      <entry key="H1" value="2.9524475060683764" />
+      <entry key="H2" value="3.40429754681722" />
+      <entry key="H4" value="3.680823831357221" />
+      <entry key="D1" value="3.9435013962858796" />
+      <entry key="W1" value="3.9918429994643927" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.4701201354484346" />
-      <entry key="MS500" value="3.2212282498533673" />
-      <entry key="S2" value="7.215447443042692" />
-      <entry key="S5" value="9.597871332570092" />
-      <entry key="S10" value="10.69615926623372" />
-      <entry key="S30" value="11.655296051564703" />
-      <entry key="S60" value="12.107135415375247" />
-      <entry key="M2" value="12.466208409053868" />
-      <entry key="M5" value="12.813823643448542" />
-      <entry key="M10" value="13.60203677921051" />
-      <entry key="M15" value="14.816609504510764" />
-      <entry key="M30" value="18.848593379772918" />
-      <entry key="H1" value="26.445947951259956" />
-      <entry key="H2" value="38.23500737855725" />
-      <entry key="H4" value="50.50366864494395" />
-      <entry key="D1" value="67.50044449403715" />
-      <entry key="W1" value="71.32988807681511" />
+      <entry key="MS100" value="1.373650608347741" />
+      <entry key="MS500" value="3.134380296400818" />
+      <entry key="S2" value="5.413160235442752" />
+      <entry key="S5" value="6.285971690615713" />
+      <entry key="S10" value="6.714877356387866" />
+      <entry key="S30" value="9.603067625332589" />
+      <entry key="S60" value="13.658093229376599" />
+      <entry key="M2" value="17.791747097009075" />
+      <entry key="M5" value="21.73643447191106" />
+      <entry key="M10" value="24.20261688302491" />
+      <entry key="M15" value="26.75665052861662" />
+      <entry key="M30" value="36.59258353049213" />
+      <entry key="H1" value="53.76931433825981" />
+      <entry key="H2" value="75.4654334488113" />
+      <entry key="H4" value="96.56517024024376" />
+      <entry key="D1" value="126.0335935140246" />
+      <entry key="W1" value="132.80839857090345" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -110,37 +110,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "KEY_CHAT_IN_TOOLWINDOW": "false",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "copilot.chat.legacySessionMetadata.migrated": "true",
-    "javascript.preferred.runtime.type.id": "node",
-    "js.debugger.nextJs.config.created.client": "true",
-    "js.debugger.nextJs.config.created.server": "true",
-    "last_opened_file_path": "C:/Users/Harshal/.vscode/ai-news-app/.agents/skills",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.jshint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.jshint": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.Next.js: server-side.executor": "Run",
-    "npm.build.executor": "Run",
-    "npm.cron.executor": "Run",
-    "npm.start.executor": "Run",
-    "npm.test:integration.executor": "Run",
-    "openrouter.chat.activeSession": "74bcc019-cb84-4fe4-b842-511b43955113",
-    "settings.editor.selected.configurable": "com.github.copilot.settings.chat.ChatConfigurable",
-    "ts.external.directory.path": "C:\\Users\\Harshal\\.vscode\\ai-news-app\\node_modules\\typescript\\lib"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;KEY_CHAT_IN_TOOLWINDOW&quot;: &quot;false&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Harshal/.vscode/ai-news-app/.agents/skills&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.Next.js: server-side.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.cron.executor&quot;: &quot;Run&quot;,
+    &quot;npm.start.executor&quot;: &quot;Run&quot;,
+    &quot;npm.test:integration.executor&quot;: &quot;Run&quot;,
+    &quot;openrouter.chat.activeSession&quot;: &quot;74bcc019-cb84-4fe4-b842-511b43955113&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.github.copilot.settings.chat.ChatConfigurable&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Harshal\\.vscode\\ai-news-app\\node_modules\\typescript\\lib&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Harshal\.vscode\ai-news-app\.agents\skills" />
@@ -154,6 +154,19 @@
   </component>
   <component name="RunManager" selected="npm.test:integration">
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: server-side" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
       <method v="2" />
     </configuration>
     <configuration name="Next.js: server-side" type="js.build_tools.npm">
@@ -171,6 +184,26 @@
       <command value="run" />
       <scripts>
         <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="cron" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="cron" />
       </scripts>
       <node-interpreter value="project" />
       <envs />

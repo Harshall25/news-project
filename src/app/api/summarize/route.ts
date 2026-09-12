@@ -14,7 +14,8 @@ export async function GET(req: Request) {
   try {
     const cached = await client.get(`summary:${id}`);
     return NextResponse.json({ summary: cached || null });
-  } catch (error) {
+  } catch (_error) {
+    console.error("Redis read failed:", _error instanceof Error ? _error.message : String(_error));
     return NextResponse.json({ summary: null });
   }
 }
@@ -67,8 +68,6 @@ export async function POST(req: Request) {
       Article:
       ${trimmed}
     `;
-
-    
 
     const result = await model.generateContent(prompt);
     const summary = result.response.text();

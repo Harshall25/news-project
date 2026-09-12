@@ -4,8 +4,8 @@ import client from "@/lib/redis";
 
 //fetches news articles from the db
 
-//currently using cloud redis (30mb) so latency is 10 to 100ms 
-//for local latency is 2 to 5 ms, also local redis is not use ful  for deploying, 
+//currently using cloud redis (30mb) so latency is 10 to 100ms
+//for local latency is 2 to 5 ms, also local redis is not use ful  for deploying,
 //docker redis or the cloud redis is must
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
   if (search) {
     where.title = { contains: search, mode: 'insensitive' };
   }
- 
+
   //Redis usage in endpoint
   //1) set cache key.
   const cacheKey = `articles:page:${page}:limit:${limit}:sentiment:${sentiment || ''}:category:${category || ''}:q:${search || ''}`;

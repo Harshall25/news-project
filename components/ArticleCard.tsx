@@ -6,11 +6,10 @@ import Image from "next/image"
 import { Article } from "@/src/types"
 import {
   Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardFooter,
 } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
 import { useState } from "react"

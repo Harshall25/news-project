@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import ArticleCard from "@/components/ArticleCard"
@@ -8,7 +8,7 @@ import ArticleCardSkeleton from "@/components/ArticleCardSkeleton"
 import { useToast } from "@/hooks/use-toast"
 import { logError, logInfo } from "@/lib/logger"
 import type { Article } from "@/src/types"
-import axios, { type CancelTokenSource } from "axios"
+import axios from "axios"
 
 const PAGE_SIZE = 20
 const SKELETON_COUNT = 8
@@ -48,33 +48,8 @@ export default function HomePage({ latestOrTrend, setLatestortrend }: HomePagePr
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
-  const latestOrTrendRef = useRef(latestOrTrend)
-  const categoryRef = useRef(category)
-  const articlesRef = useRef(articles)
-  const pageRef = useRef(page)
-  const totalPagesRef = useRef(totalPages)
-  const cancelTokenRef = useRef<CancelTokenSource | null>(null)
-  const isFetchingRef = useRef(false)
-
-  latestOrTrendRef.current = latestOrTrend
-  categoryRef.current = category
-  articlesRef.current = articles
-  pageRef.current = page
-  totalPagesRef.current = totalPages
-
   const fetchArticles = useCallback(
     async (nextPage: number, append: boolean) => {
-      if (isFetchingRef.current) return
-      isFetchingRef.current = true
-
-      if (cancelTokenRef.current) {
-        cancelTokenRef.current.cancel("New request superseded")
-      }
-      cancelTokenRef.current = axios.CancelToken.source()
-
-      const isTrending = latestOrTrendRef.current
-      const cat = categoryRef.current
-
       try {
         if (append) {
           setLoadingMore(true)
@@ -84,51 +59,50 @@ export default function HomePage({ latestOrTrend, setLatestortrend }: HomePagePr
         setError(null)
 
         let res
+        let fetchedCount = 0
 
-        if (!isTrending) {
+        if (!latestOrTrend) {
           let latestUrl = `/api/articles?page=${nextPage}&limit=${PAGE_SIZE}`
-          if (cat) {
-            latestUrl += `&category=${encodeURIComponent(cat)}`
+          if (category) {
+            latestUrl += `&category=${encodeURIComponent(category)}`
           }
-          res = await axios.get(latestUrl, { cancelToken: cancelTokenRef.current.token })
+          res = await axios.get(latestUrl)
 
           if (res.data?.error) {
             throw new Error(toErrorMessage(res.data.error))
           }
 
           const incoming = Array.isArray(res.data?.articles) ? res.data.articles : []
+          fetchedCount = incoming.length
 
           setArticles((prev) => (append ? [...prev, ...incoming] : incoming))
           setPage(typeof res.data?.page === "number" ? res.data.page : nextPage)
           setTotalPages(typeof res.data?.totalPages === "number" ? res.data.totalPages : 1)
         } else {
           let trendingUrl = "/api/trending"
-          if (cat) {
-            trendingUrl += `?category=${encodeURIComponent(cat)}`
+          if (category) {
+            trendingUrl += `?category=${encodeURIComponent(category)}`
           }
-          res = await axios.get(trendingUrl, { cancelToken: cancelTokenRef.current.token })
+          res = await axios.get(trendingUrl)
 
           if (res.data?.error) {
             throw new Error(toErrorMessage(res.data.error))
           }
 
           const incoming = Array.isArray(res.data?.articles) ? res.data.articles : []
+          fetchedCount = incoming.length
           setArticles(incoming)
           setPage(1)
           setTotalPages(1)
         }
 
         logInfo("Articles fetched", {
-          count: articlesRef.current.length + (append ? 0 : 0),
+          count: fetchedCount,
           page: nextPage,
-          type: isTrending ? "trending" : "latest",
-          category: cat || "all",
+          type: latestOrTrend ? "trending" : "latest",
+          category: category || "all",
         })
       } catch (e: unknown) {
-        if (axios.isCancel(e)) {
-          return
-        }
-
         if (!append) {
           setArticles([])
         }
@@ -143,13 +117,13 @@ export default function HomePage({ latestOrTrend, setLatestortrend }: HomePagePr
             status: statusCode,
             url: e.config?.url,
             message: errorMessage,
-            type: latestOrTrendRef.current ? "trending" : "latest",
+            type: latestOrTrend ? "trending" : "latest",
           })
         } else {
           errorMessage = toErrorMessage(e instanceof Error ? e.message : String(e))
           logError("Fetch Error", {
             message: errorMessage,
-            type: latestOrTrendRef.current ? "trending" : "latest",
+            type: latestOrTrend ? "trending" : "latest",
           })
         }
 
@@ -160,29 +134,28 @@ export default function HomePage({ latestOrTrend, setLatestortrend }: HomePagePr
           duration: 15000,
         })
       } finally {
-        isFetchingRef.current = false
         setLoading(false)
         setLoadingMore(false)
       }
     },
-    [showToast]
+    [category, latestOrTrend, showToast]
   )
 
-  // Trigger fetch when category or latestOrTrend changes
   useEffect(() => {
-    setPage(1)
-    setTotalPages(1)
-    fetchArticles(1, false)
-  }, [fetchArticles, latestOrTrend, category])
+    const loadArticles = async () => {
+      await fetchArticles(1, false)
+    }
+    loadArticles()
+  }, [fetchArticles])
 
   const handleLoadMore = useCallback(async () => {
     if (loading || loadingMore) return
-    if (latestOrTrendRef.current) return
-    if (pageRef.current >= totalPagesRef.current) return
+    if (latestOrTrend) return
+    if (page >= totalPages) return
 
-    const nextPage = pageRef.current + 1
+    const nextPage = page + 1
     await fetchArticles(nextPage, true)
-  }, [loading, loadingMore, fetchArticles])
+  }, [loading, loadingMore, latestOrTrend, page, totalPages, fetchArticles])
 
   const renderSkeletons = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -192,22 +165,22 @@ export default function HomePage({ latestOrTrend, setLatestortrend }: HomePagePr
     </div>
   )
 
-  const handleLatestClick = () => {
-    setLatestortrend(false)
-    router.push("/")
-  }
-
-  const handleTrendingClick = () => {
-    setLatestortrend(true)
-  }
-
   return (
     <div className="space-y-6">
       <div className="flex gap-2">
-        <Button variant={!latestOrTrend ? "default" : "outline"} onClick={handleLatestClick}>
+        <Button
+          variant={!latestOrTrend ? "default" : "outline"}
+          onClick={() => {
+            setLatestortrend(false)
+            router.push("/")
+          }}
+        >
           Latest News
         </Button>
-        <Button variant={latestOrTrend ? "default" : "outline"} onClick={handleTrendingClick}>
+        <Button
+          variant={latestOrTrend ? "default" : "outline"}
+          onClick={() => setLatestortrend(true)}
+        >
           Trending News
         </Button>
       </div>

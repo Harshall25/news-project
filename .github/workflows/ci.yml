@@ -169,6 +169,8 @@ jobs:
       # --------------------------------------------------------
       # Lint
       # --------------------------------------------------------
+      - name: Fix linting
+        run: npm run lint -- --fix
 
       - name: Run linting
         run: npm run lint
