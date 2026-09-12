@@ -1,8 +1,16 @@
 import client from "@/lib/redis";
 import axios from "axios";
 import { NextResponse } from "next/server";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
-export const GET = async () => {
+export const GET = async (req: Request) => {
+  const ip = getClientIp(req.headers);
+  const { success } = await checkRateLimit("trending", ip);
+  if (!success) {
+    return NextResponse.json({
+      error: "Too many requests. Please try again later."
+    }, { status: 429 });
+  }
 
   const cacheKey = "trendingNews";
 
@@ -11,14 +19,14 @@ export const GET = async () => {
     if(cached){
       return NextResponse.json(typeof cached === 'string' ? JSON.parse(cached) : cached);
     }
-  }catch(cacheError:any){
-    console.error("Redis write failed:", cacheError?.message || cacheError);
+  }catch(cacheError: unknown){
+    console.error("Redis write failed:", cacheError instanceof Error ? cacheError.message : String(cacheError));
   }
-  
+
   try {
     const url = "https://api.worldnewsapi.com/top-news";
     //format date
-    const formatDateISO = (date: any) => {
+    const formatDateISO = (date: Date) => {
       return date.toLocaleDateString('en-CA');
     };
 
@@ -36,10 +44,10 @@ export const GET = async () => {
 
     const data = response.data;
     const top_news = data.top_news;
-    const newsArr = top_news.flatMap((item: any) => item.news || []);
+    const newsArr = top_news.flatMap((item: { news?: Array<{ sentiment?: number }> }) => item.news || []);
 
     //filter with positive sentiment
-    const filteredNews = newsArr.filter((item: any) => item.sentiment > 0);
+    const filteredNews = newsArr.filter((item: { sentiment?: number }) => (item.sentiment ?? 0) > 0);
     const resultArticles = filteredNews.slice(0, 20); //limiting the response
 
     const result = {
@@ -50,23 +58,23 @@ export const GET = async () => {
     //enter in the cache
     try {
       await client.setex(cacheKey, 300, result);
-    } catch (cacheError: any) {
-      console.error("Redis write failed:", cacheError?.message || cacheError);
+    } catch (cacheError: unknown) {
+      console.error("Redis write failed:", cacheError instanceof Error ? cacheError.message : String(cacheError));
     }
 
     return NextResponse.json(result);
-  } catch (e: any) {
-    if (e.response) {
+  } catch (e: unknown) {
+    if (axios.isAxiosError(e) && e.response) {
       return NextResponse.json({
         "error": e.response.data
       }, { status: e.response.status || 500 })
-    } else if (e.request) {
+    } else if (axios.isAxiosError(e) && e.request) {
       return NextResponse.json({
-        "error": e.request.data || "Network error"
+        "error": "Network error"
       }, { status: 503 })
     }
     return NextResponse.json({
-      "error": e.message || String(e)
+      "error": e instanceof Error ? e.message : String(e)
     }, { status: 500 })
   }
-} 
+}

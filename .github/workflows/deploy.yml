@@ -1,0 +1,540 @@
+# ============================================================
+# PRODUCTION DEPLOYMENT WORKFLOW
+# ============================================================
+#
+# Purpose:
+#   Build the Docker image, push it to Azure Container Registry,
+#   run Prisma production migrations, and deploy the exact image
+#   to Azure Container Apps.
+#
+# Architecture:
+#
+#   GitHub
+#      |
+#      v
+#   CI workflow
+#      |
+#      | SUCCESS
+#      v
+#   Docker Build
+#      |
+#      v
+#   Azure Container Registry
+#      |
+#      v
+#   Prisma Migration
+#      |
+#      v
+#   Azure Container Apps
+#      |
+#      v
+#   /api/health
+#
+# The deployment uses the EXACT Git commit SHA as its Docker tag.
+# This prevents ambiguity about which source code is running.
+# ============================================================
+
+name: Deploy to Azure Container Apps
+
+
+# ============================================================
+# WORKFLOW TRIGGERS
+# ============================================================
+
+on:
+
+  # ----------------------------------------------------------
+  # Automatically deploy after the CI workflow succeeds.
+  # ----------------------------------------------------------
+  #
+  # `workflow_run` means this workflow is triggered by the
+  # completion of another GitHub Actions workflow.
+  # ----------------------------------------------------------
+
+  workflow_run:
+    workflows:
+      - "CI"
+
+    branches:
+      - integration-mainline
+
+    types:
+      - completed
+
+
+  # ----------------------------------------------------------
+  # Allow manual deployment from GitHub Actions.
+  # ----------------------------------------------------------
+
+  workflow_dispatch:
+
+
+# ============================================================
+# GITHUB TOKEN PERMISSIONS
+# ============================================================
+#
+# id-token: write is required for Azure OIDC authentication.
+#
+# This allows GitHub Actions to obtain an OIDC token and
+# authenticate to Azure without storing an Azure client secret.
+# ============================================================
+
+permissions:
+  contents: read
+  id-token: write
+
+
+# ============================================================
+# DEPLOYMENT ENVIRONMENT VARIABLES
+# ============================================================
+#
+# These values are stored as GitHub Environment secrets.
+#
+# Example:
+#
+#   AZURE_CONTAINER_REGISTRY
+#       myregistry.azurecr.io
+#
+#   AZURE_CONTAINER_APP_NAME
+#       ai-news-app
+#
+#   AZURE_RESOURCE_GROUP
+#       ai-news-resource-group
+#
+#   AZURE_CONTAINER_APP_ENV
+#       ai-news-container-env
+# ============================================================
+
+env:
+  AZURE_CONTAINER_REGISTRY: ${{ secrets.AZURE_CONTAINER_REGISTRY }}
+  CONTAINER_APP_NAME: ${{ secrets.AZURE_CONTAINER_APP_NAME }}
+  RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
+  CONTAINER_APP_ENV: ${{ secrets.AZURE_CONTAINER_APP_ENV }}
+
+
+# ============================================================
+# JOBS
+# ============================================================
+
+jobs:
+
+
+  # ==========================================================
+  # JOB 1: BUILD AND PUSH DOCKER IMAGE
+  # ==========================================================
+  #
+  # This job:
+  #
+  #   1. Gets the exact commit that CI tested.
+  #   2. Builds the Docker image.
+  #   3. Pushes the image to Azure Container Registry.
+  #
+  # The image tag is:
+  #
+  #   sha-<FULL GIT SHA>
+  #
+  # Example:
+  #
+  #   ai-news-app:sha-a1b2c3d4e5...
+  #
+  # This makes every deployment traceable to one exact commit.
+  # ==========================================================
+
+  build-and-push:
+
+    # --------------------------------------------------------
+    # Automatic deployment:
+    #   CI must have succeeded.
+    #
+    # Manual deployment:
+    #   workflow_dispatch is allowed directly.
+    # --------------------------------------------------------
+
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+
+      # --------------------------------------------------------
+      # Checkout exact commit tested by CI.
+      # --------------------------------------------------------
+      #
+      # For workflow_run:
+      #
+      #   github.event.workflow_run.head_sha
+      #
+      # represents the commit from the completed CI workflow.
+      #
+      # For manual execution:
+      #
+      #   github.sha
+      #
+      # is used.
+      # --------------------------------------------------------
+
+      - name: Checkout exact deployment commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+
+
+      # --------------------------------------------------------
+      # Install Docker Buildx.
+      # --------------------------------------------------------
+      #
+      # Buildx provides modern Docker builds and GitHub Actions
+      # build caching.
+      # --------------------------------------------------------
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+
+      # --------------------------------------------------------
+      # Authenticate to Azure Container Registry.
+      # --------------------------------------------------------
+      #
+      # These credentials are specifically for ACR:
+      #
+      #   ACR_USERNAME
+      #   ACR_PASSWORD
+      #
+      # Azure OIDC authentication is performed later for Azure
+      # resource management.
+      # --------------------------------------------------------
+
+      - name: Log in to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.AZURE_CONTAINER_REGISTRY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+
+      # --------------------------------------------------------
+      # Generate Docker image metadata.
+      # --------------------------------------------------------
+      #
+      # IMPORTANT:
+      #
+      # `format=long` creates:
+      #
+      #   sha-<FULL 40 CHARACTER COMMIT SHA>
+      #
+      # We intentionally use this exact tag when deploying.
+      #
+      # This fixes the tag mismatch problem where the image being
+      # pushed had a different name/tag from the image Azure was
+      # asked to deploy.
+      #
+      # `latest` is additionally created for the default branch.
+      # Azure deployment does NOT use latest. It uses the
+      # immutable SHA tag.
+      # --------------------------------------------------------
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.AZURE_CONTAINER_REGISTRY }}/ai-news-app
+
+          tags: |
+            type=sha,format=long
+            type=raw,value=latest,enable={{is_default_branch}}
+
+
+      # --------------------------------------------------------
+      # Build and push Docker image.
+      # --------------------------------------------------------
+      #
+      # Example resulting image:
+      #
+      #   myregistry.azurecr.io/ai-news-app:sha-a1b2c3...
+      #
+      # The Docker build uses the Dockerfile in repository root.
+      # --------------------------------------------------------
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+
+          # Use every tag generated by docker/metadata-action.
+          tags: ${{ steps.meta.outputs.tags }}
+
+          # Add OCI metadata labels to the image.
+          labels: ${{ steps.meta.outputs.labels }}
+
+          # Reuse Docker build cache from GitHub Actions.
+          cache-from: type=gha
+
+          # Save updated build cache back to GitHub Actions.
+          cache-to: type=gha,mode=max
+
+
+  # ==========================================================
+  # JOB 2: DATABASE MIGRATION
+  # ==========================================================
+  #
+  # Prisma migrations are deliberately NOT executed inside
+  # the Docker container.
+  #
+  # Why?
+  #
+  # Azure Container Apps can run multiple replicas/revisions.
+  # Putting `prisma migrate deploy` inside CMD would make every
+  # application startup attempt a database migration.
+  #
+  # Instead:
+  #
+  #   Docker image built
+  #          |
+  #          v
+  #   Prisma migration runs ONCE
+  #          |
+  #          v
+  #   Application deployment
+  #
+  # This is much safer.
+  # ==========================================================
+
+  migrate:
+
+    needs:
+      - build-and-push
+
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # Production environment secrets are available here.
+    environment: production
+
+    steps:
+
+      # --------------------------------------------------------
+      # Checkout exact same commit used to build the image.
+      # --------------------------------------------------------
+
+      - name: Checkout exact deployment commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+
+
+      # --------------------------------------------------------
+      # Setup Node.js for Prisma CLI.
+      # --------------------------------------------------------
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+
+      # --------------------------------------------------------
+      # Install project dependencies.
+      # --------------------------------------------------------
+
+      - name: Install dependencies
+        run: npm ci
+
+
+      # --------------------------------------------------------
+      # Generate Prisma Client.
+      # --------------------------------------------------------
+      #
+      # This prepares Prisma before running migrations.
+      # --------------------------------------------------------
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+
+      # --------------------------------------------------------
+      # Apply pending production migrations.
+      # --------------------------------------------------------
+      #
+      # DATABASE_URL is a production GitHub secret.
+      #
+      # NEVER put the production DATABASE_URL directly into
+      # the workflow YAML.
+      # --------------------------------------------------------
+
+      - name: Run Prisma migrations
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npx prisma migrate deploy
+
+
+  # ==========================================================
+  # JOB 3: DEPLOY TO AZURE CONTAINER APPS
+  # ==========================================================
+  #
+  # This job only starts after:
+  #
+  #   build-and-push
+  #   migrate
+  #
+  # have both succeeded.
+  # ==========================================================
+
+  deploy:
+
+    needs:
+      - build-and-push
+      - migrate
+
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    # Gives this job access to production environment protection
+    # rules and production secrets.
+    environment: production
+
+    steps:
+
+      # --------------------------------------------------------
+      # Azure OIDC login.
+      # --------------------------------------------------------
+      #
+      # This authenticates GitHub Actions to Azure without
+      # storing a long-lived Azure password/client secret.
+      #
+      # The corresponding Azure federated identity credential must
+      # already be configured for the GitHub repository.
+      # --------------------------------------------------------
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+
+      # --------------------------------------------------------
+      # Deploy exact Docker image to Azure Container Apps.
+      # --------------------------------------------------------
+      #
+      # IMPORTANT:
+      #
+      # docker/metadata-action generated:
+      #
+      #   sha-<FULL GIT SHA>
+      #
+      # Therefore Azure is explicitly told to deploy:
+      #
+      #   ai-news-app:sha-<FULL GIT SHA>
+      #
+      # This guarantees that Azure runs the same commit that
+      # triggered this deployment.
+      # --------------------------------------------------------
+
+      - name: Deploy to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          containerAppName: ${{ env.CONTAINER_APP_NAME }}
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
+          environment: ${{ env.CONTAINER_APP_ENV }}
+
+          imageToDeploy: >-
+            ${{ env.AZURE_CONTAINER_REGISTRY }}/ai-news-app:sha-${{
+              github.event.workflow_run.head_sha || github.sha
+            }}
+
+
+      # --------------------------------------------------------
+      # Verify deployment.
+      # --------------------------------------------------------
+      #
+      # Azure Container Apps may need some time to start the new
+      # revision.
+      #
+      # We therefore:
+      #
+      #   1. Ask Azure for the public hostname.
+      #   2. Try /api/health.
+      #   3. Retry up to 12 times.
+      #   4. Wait 10 seconds between attempts.
+      #
+      # Maximum verification wait:
+      #
+      #   12 × 10 seconds = 120 seconds
+      # --------------------------------------------------------
+
+      - name: Verify deployment
+        run: |
+          set -e
+
+          # Get the Container App's public hostname.
+          APP_FQDN=$(az containerapp show \
+            --name "${{ env.CONTAINER_APP_NAME }}" \
+            --resource-group "${{ env.RESOURCE_GROUP }}" \
+            --query "properties.configuration.ingress.fqdn" \
+            --output tsv)
+
+          # Make sure Azure returned a hostname.
+          if [ -z "$APP_FQDN" ]; then
+            echo "Could not determine Container App FQDN."
+            exit 1
+          fi
+
+          echo "Application URL: https://${APP_FQDN}"
+
+          # Retry health check because a fresh revision may take
+          # a few seconds to become available.
+          for i in {1..12}; do
+
+            echo "Health check attempt $i/12..."
+
+            if curl \
+              --fail \
+              --silent \
+              --show-error \
+              --max-time 10 \
+              "https://${APP_FQDN}/api/health"; then
+
+              echo ""
+              echo "Deployment verification successful."
+              exit 0
+            fi
+
+            echo "Application is not ready yet."
+            echo "Waiting 10 seconds..."
+
+            sleep 10
+          done
+
+          echo "Deployment verification failed."
+          exit 1
+
+
+      # --------------------------------------------------------
+      # Final deployment summary.
+      # --------------------------------------------------------
+
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "=========================================="
+          echo "Azure deployment successful"
+          echo "=========================================="
+          echo "Application: ${{ env.CONTAINER_APP_NAME }}"
+          echo "Commit: ${{ github.event.workflow_run.head_sha || github.sha }}"
+          echo "Registry: ${{ env.AZURE_CONTAINER_REGISTRY }}"

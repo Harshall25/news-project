@@ -1,5 +1,3 @@
-import { Article as PrismaArticle } from "@prisma/client";
-
 export interface WorldNewsArticle {
   title: string;
   source?: string;
@@ -19,4 +17,15 @@ export interface WorldNewsResponse {
   }[];
 }
 
-export type Article = PrismaArticle;
+export interface Article {
+  id: string;
+  title: string;
+  source: string;
+  url: string;
+  publishedAt: string | Date;
+  content: string;
+  sentiment: string;
+  category: string | null;
+  createdAt: string | Date;
+  imageUrl: string | null;
+}

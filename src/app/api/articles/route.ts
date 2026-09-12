@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import client from "@/lib/redis";
-import { Prisma } from "@prisma/client";
 
 //fetches news articles from the db
 
@@ -16,7 +15,7 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get('category');
   const search = searchParams.get('q');
 
-  const where: Prisma.ArticleWhereInput = {};
+  const where: Record<string, unknown> = {};
   if (sentiment) where.sentiment = sentiment;
   if (category) where.category = category;
   if (search) {

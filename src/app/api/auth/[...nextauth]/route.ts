@@ -4,8 +4,9 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
 
-const handler =  NextAuth({
+const handler = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
@@ -26,8 +27,12 @@ const handler =  NextAuth({
         password: { label: "Password", type: "password" }
       },
 
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials) return null
+
+        const ip = getClientIp(req?.headers ?? {})
+        const { success } = await checkRateLimit("login", ip)
+        if (!success) return null
 
         const { email, password } = credentials
 

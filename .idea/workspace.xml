@@ -1,26 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BackgroundAgentGlobalSettings">
+    <option name="selectedModelId" value="auto" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="19580759-f902-4a34-ae9a-99ff31829175" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
-    </list>
+    <list default="true" id="19580759-f902-4a34-ae9a-99ff31829175" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Dockerfile" />
-      </list>
-    </option>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/Harshal/.vscode/ai-news-app" value="3JDM1NmAJ7gOjje4ntNRrAmDrU1" />
+    </persistenceIdMap>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.5050887860738724" />
+      <entry key="MS500" value="3.24028118468566" />
+      <entry key="S2" value="7.2301913078119595" />
+      <entry key="S5" value="9.606100622146224" />
+      <entry key="S10" value="10.700804798069408" />
+      <entry key="S30" value="11.65702711438365" />
+      <entry key="S60" value="12.108065749847796" />
+      <entry key="M2" value="12.466703681739807" />
+      <entry key="M5" value="12.814212783439034" />
+      <entry key="M10" value="13.603286569606636" />
+      <entry key="M15" value="14.818478270352312" />
+      <entry key="M30" value="18.85079236218408" />
+      <entry key="H1" value="26.447683838243165" />
+      <entry key="H2" value="38.23612638089666" />
+      <entry key="H4" value="50.504315172122624" />
+      <entry key="D1" value="67.50056807721664" />
+      <entry key="W1" value="71.32990618875195" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.4701201354484346" />
+      <entry key="MS500" value="3.2212282498533673" />
+      <entry key="S2" value="7.215447443042692" />
+      <entry key="S5" value="9.597871332570092" />
+      <entry key="S10" value="10.69615926623372" />
+      <entry key="S30" value="11.655296051564703" />
+      <entry key="S60" value="12.107135415375247" />
+      <entry key="M2" value="12.466208409053868" />
+      <entry key="M5" value="12.813823643448542" />
+      <entry key="M10" value="13.60203677921051" />
+      <entry key="M15" value="14.816609504510764" />
+      <entry key="M30" value="18.848593379772918" />
+      <entry key="H1" value="26.445947951259956" />
+      <entry key="H2" value="38.23500737855725" />
+      <entry key="H4" value="50.50366864494395" />
+      <entry key="D1" value="67.50044449403715" />
+      <entry key="W1" value="71.32988807681511" />
+    </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1,
@@ -30,28 +92,67 @@
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
+  <component name="ProjectSessionTemplates">
+    <option name="panelTemplate">
+      <template>
+        <option name="modeId" value="Agent" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_id" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="LOCAL" />
+      </template>
+    </option>
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "KEY_CHAT_IN_TOOLWINDOW": "false",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "feat/deploy-cicd",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
     "javascript.preferred.runtime.type.id": "node",
     "js.debugger.nextJs.config.created.client": "true",
     "js.debugger.nextJs.config.created.server": "true",
-    "last_opened_file_path": "C:/Users/Harshal/.vscode/ai-news-app",
+    "last_opened_file_path": "C:/Users/Harshal/.vscode/ai-news-app/.agents/skills",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.intentionPowerPack",
+    "npm.Next.js: server-side.executor": "Run",
+    "npm.build.executor": "Run",
+    "npm.cron.executor": "Run",
+    "npm.start.executor": "Run",
+    "npm.test:integration.executor": "Run",
+    "openrouter.chat.activeSession": "74bcc019-cb84-4fe4-b842-511b43955113",
+    "settings.editor.selected.configurable": "com.github.copilot.settings.chat.ChatConfigurable",
     "ts.external.directory.path": "C:\\Users\\Harshal\\.vscode\\ai-news-app\\node_modules\\typescript\\lib"
   }
 }]]></component>
-  <component name="RunManager" selected="npm.Next.js: server-side">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Harshal\.vscode\ai-news-app\.agents\skills" />
+      <recent name="C:\Users\Harshal\.vscode\ai-news-app\.agents" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Harshal\.vscode\ai-news-app\.github" />
+      <recent name="C:\Users\Harshal\.vscode\ai-news-app\.agents" />
+      <recent name="C:\Users\Harshal\.vscode\ai-news-app\" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.test:integration">
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
       <method v="2" />
     </configuration>
@@ -65,6 +166,54 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="cron" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="cron" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="test:integration" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="test:integration" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.test:integration" />
+        <item itemvalue="npm.build" />
+        <item itemvalue="npm.start" />
+        <item itemvalue="npm.cron" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -82,7 +231,9 @@
       <updated>1786272524641</updated>
       <workItem from="1786272526802" duration="57000" />
       <workItem from="1786272601548" duration="6114000" />
-      <workItem from="1786383507598" duration="2110000" />
+      <workItem from="1789149178921" duration="3803000" />
+      <workItem from="1789190812601" duration="1983000" />
+      <workItem from="1789193353885" duration="17655000" />
     </task>
     <servers />
   </component>

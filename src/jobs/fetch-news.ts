@@ -1,7 +1,6 @@
 import axios from "axios";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-// @ts-ignore
 import { WorldNewsArticle } from "@/src/types";
 
 const url = "https://api.worldnewsapi.com/search-news";
@@ -59,23 +58,27 @@ export async function fetchNews() {
     imageUrl: a.image || null,
   }));
 
-  await Promise.all(
-    formatted.map((article) =>
-      prisma.article.upsert({
-        where: { url: article.url },
-        update: {
-          title: article.title,
-          source: article.source,
-          publishedAt: article.publishedAt,
-          content: article.content,
-          sentiment: article.sentiment,
-          category: article.category,
-          imageUrl: article.imageUrl,
-        },
-        create: article,
-      })
-    )
-  );
+  const UPSERT_BATCH_SIZE = 10;
+  for (let i = 0; i < formatted.length; i += UPSERT_BATCH_SIZE) {
+    const batch = formatted.slice(i, i + UPSERT_BATCH_SIZE);
+    await Promise.all(
+      batch.map((article) =>
+        prisma.article.upsert({
+          where: { url: article.url },
+          update: {
+            title: article.title,
+            source: article.source,
+            publishedAt: article.publishedAt,
+            content: article.content,
+            sentiment: article.sentiment,
+            category: article.category,
+            imageUrl: article.imageUrl,
+          },
+          create: article,
+        })
+      )
+    );
+  }
 
   return formatted;
 }
