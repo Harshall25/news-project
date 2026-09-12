@@ -1,7 +1,6 @@
 import axios from "axios";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-// @ts-expect-error path alias type import resolution
 import { WorldNewsArticle } from "@/src/types";
 
 const url = "https://api.worldnewsapi.com/search-news";

@@ -3,10 +3,30 @@ import { useEffect, useState } from "react"
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 // @ts-ignore
 import { Article } from "@/src/types";
+
+function ArticleSkeleton() {
+  return (
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 space-y-6 animate-pulse">
+      <div className="aspect-video w-full rounded-xl bg-muted animate-shimmer" />
+      <div className="space-y-3">
+        <div className="h-8 w-4/5 rounded bg-muted animate-shimmer" />
+        <div className="h-8 w-2/3 rounded bg-muted animate-shimmer" />
+      </div>
+      <div className="h-4 w-1/3 rounded bg-muted animate-shimmer" />
+      <div className="space-y-2 pt-4">
+        <div className="h-4 w-full rounded bg-muted animate-shimmer" />
+        <div className="h-4 w-11/12 rounded bg-muted animate-shimmer" />
+        <div className="h-4 w-full rounded bg-muted animate-shimmer" />
+        <div className="h-4 w-4/5 rounded bg-muted animate-shimmer" />
+      </div>
+    </div>
+  );
+}
+
 export default function Page() {
   const params = useParams();
   const id = params.id as string;
@@ -17,6 +37,7 @@ export default function Page() {
   const [error, setError] = useState('');
   const [summary, setSummary] = useState("");
   const [summaryLoading, setSummaryLoading] = useState(false);
+
   useEffect(() => {
     const getArticle = async () => {
       try {
@@ -26,8 +47,7 @@ export default function Page() {
         setArticle(res.data);
       } catch (error: unknown) {
         setError(error instanceof Error ? error.message : String(error));
-      }
-      finally {
+      } finally {
         setLoading(false);
       }
     };
@@ -43,7 +63,7 @@ export default function Page() {
       if (res.data.summary) {
         setSummary(res.data.summary);
       }
-    } catch (e) {
+    } catch {
       // Ignore errors when checking cache
     }
   };
@@ -53,7 +73,6 @@ export default function Page() {
     try {
       setSummaryLoading(true);
       setError('');
-      
       const res = await axios.post("/api/summarize", {
         content: article.content,
         articleId: id,
@@ -63,26 +82,12 @@ export default function Page() {
       if (axios.isAxiosError(e) && e.response?.status === 401) {
         setError("You must be logged in to generate AI summaries.");
       } else {
-        console.log(e instanceof Error ? e.message : String(e));
         setError("Failed to generate summary. Please try again later.");
       }
     } finally {
       setSummaryLoading(false);
     }
   };
-
-
-  if (loading) {
-    return <div>
-      Loading article please wait
-    </div>
-  }
-
-  if (error) {
-    return <div>
-      Error: {error}
-    </div>
-  }
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -92,66 +97,128 @@ export default function Page() {
     }
   };
 
+  if (loading) return <ArticleSkeleton />;
 
+  if (error && !article) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-dvh gap-4 px-4 text-center">
+        <p className="text-destructive text-sm font-medium">{error}</p>
+        <Button variant="outline" size="sm" onClick={() => router.replace("/")}>
+          Back to home
+        </Button>
+      </div>
+    );
+  }
 
   return (
-    <div>
+    <>
+      {/* Floating back button — bottom-left on mobile, follows safe area */}
+      <div className="fixed bottom-6 left-6 z-50">
+        <Button
+          onClick={handleBack}
+          variant="outline"
+          size="sm"
+          className="shadow-lg bg-background/90 backdrop-blur-sm border-border gap-2"
+          aria-label="Go back"
+        >
+          <ArrowLeft className="size-4" />
+          Back
+        </Button>
+      </div>
 
-      <Button onClick={handleBack} variant="outline" className=" fixed bottom-5 left-25 ml-3 px-5 py-4 bg-black text-white rounded-lg shadow-lg">
-        <ArrowLeftIcon />
-        Back
-      </ Button>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 py-10 pb-24">
 
-      <div className="max-w-3xl mx-auto p-5 space-y-6">
-
+        {/* Hero image */}
         {article?.imageUrl && (
-          <Image
-            src={article.imageUrl}
-            width={800}
-            height={400}
-            className="w-full h-105 object-cover rounded-lg"
-            alt={article.title || "News Article Image"}
-          />
+          <div className="relative aspect-video w-full overflow-hidden rounded-xl mb-8">
+            <Image
+              src={article.imageUrl}
+              width={900}
+              height={506}
+              className="w-full h-full object-cover"
+              alt={article.title || "News article image"}
+              priority
+            />
+          </div>
         )}
 
-        <h1 className="text-2xl font-bold">
+        {/* Headline — editorial serif */}
+        <h1 className="font-display text-3xl md:text-4xl font-bold leading-tight tracking-tight text-balance mb-3">
           {article?.title}
         </h1>
 
-
-        <p className="text-sm text-gray-500">
-          {article?.source} •{" "}
-          {article?.publishedAt ? new Date(article.publishedAt).toDateString() : ""}
+        {/* Byline */}
+        <p className="text-sm text-muted-foreground mb-8">
+          {article?.source}
+          {article?.publishedAt && (
+            <>
+              {" "}·{" "}
+              {new Date(article.publishedAt).toLocaleDateString(undefined, {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </>
+          )}
         </p>
 
-
-        <div className="bg-gray-100 p-4 rounded-lg mt-6">
-          <h2 className="font-semibold mb-2">AI Summary</h2>
+        {/* AI Summary panel */}
+        <div className="rounded-xl border border-border bg-muted/40 p-5 mb-8">
+          <h2 className="font-display text-base font-semibold mb-3 text-foreground">
+            AI Summary
+          </h2>
 
           {summaryLoading ? (
-            <p>Generating summary...</p>
+            <div className="space-y-2">
+              <div className="h-4 w-full rounded animate-shimmer" />
+              <div className="h-4 w-11/12 rounded animate-shimmer" />
+              <div className="h-4 w-4/5 rounded animate-shimmer" />
+            </div>
           ) : summary ? (
-            <p className="whitespace-pre-line">{summary}</p>
+            <p className="text-sm text-foreground leading-relaxed font-serif-body whitespace-pre-line text-pretty">
+              {summary}
+            </p>
           ) : (
-            <Button onClick={getSummary} className="mt-2 bg-blue-600 hover:bg-blue-700 text-white">
-              Generate AI Summary
-            </Button>
+            <div className="flex flex-col gap-3">
+              <p className="text-sm text-muted-foreground">
+                Generate an AI-powered summary of this article.
+              </p>
+              <Button
+                onClick={getSummary}
+                size="sm"
+                className="self-start"
+              >
+                Generate summary
+              </Button>
+            </div>
+          )}
+
+          {error && (
+            <p className="mt-3 text-xs text-destructive">{error}</p>
           )}
         </div>
 
+        {/* Article content — prose plugin handles all typography */}
+        {article?.content && (
+          <div className="prose prose-zinc dark:prose-invert prose-lg max-w-none font-serif-body">
+            <p className="text-pretty">{article.content}</p>
+          </div>
+        )}
 
-
-        <div className="mt-6">
-          <a
-            href={article?.url}
-            target="_blank"
-            className="text-blue-600 underline cursor-pointer"
-          >
-            Read full article
-          </a>
-        </div>
-
-      </div>
-    </div>
+        {/* Read original */}
+        {article?.url && (
+          <div className="mt-8 pt-6 border-t border-border">
+            <a
+              href={article.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium text-primary hover:underline underline-offset-4 transition-colors"
+            >
+              Read the full article at {article.source} →
+            </a>
+          </div>
+        )}
+      </article>
+    </>
   );
 }

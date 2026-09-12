@@ -18,7 +18,6 @@ export default withAuth(
 export const config = {
   matcher: [
     "/api/trending/:path*",
-    "/api/jobs/:path*",
     "/api/articles/:path*",
     "/api/article/:path*",
   ],

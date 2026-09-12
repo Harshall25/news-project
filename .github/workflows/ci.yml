@@ -1,49 +1,516 @@
+# ============================================================
+# CI WORKFLOW
+# ============================================================
+#
+# Purpose:
+#   This workflow validates the application before deployment.
+#
+# Flow:
+#
+#   Push / PR / Weekly Schedule
+#              |
+#              v
+#        +-------------+
+#        |   Quality   |
+#        +-------------+
+#              |
+#        +-------------+
+#        |    Tests    |
+#        +-------------+
+#              |
+#              v
+#        +-------------+
+#        |    Build    |
+#        +-------------+
+#
+# The deployment workflow runs separately and only starts
+# after this workflow completes successfully.
+# ============================================================
+
 name: CI
 
+
+# ============================================================
+# WORKFLOW TRIGGERS
+# ============================================================
+
 on:
-  pull_request:
+
+  # Run CI whenever code is pushed to the integration branch.
   push:
     branches:
-      - main
+      - integration-mainline
+
+  # Run CI for pull requests targeting the integration branch.
+  pull_request:
+    branches:
+      - integration-mainline
+
+  # Run a dependency/security check every Monday at 03:00 UTC.
+  #
+  # GitHub cron uses UTC.
+  # 03:00 UTC = 08:30 AM IST.
+  schedule:
+    - cron: "0 3 * * 1"
+
+
+# ============================================================
+# GITHUB TOKEN PERMISSIONS
+# ============================================================
+#
+# The CI workflow only needs to read repository contents.
+# Giving workflows unnecessary permissions is a security risk.
+# ============================================================
 
 permissions:
   contents: read
 
+
+# ============================================================
+# CI ENVIRONMENT VARIABLES
+# ============================================================
+#
+# These are ONLY placeholder values used during CI.
+#
+# IMPORTANT:
+# These are NOT production credentials.
+# Production secrets are stored in GitHub/Azure separately.
+#
+# If your Next.js build actually connects to the database during
+# build time, this fake DATABASE_URL will not be sufficient.
+# In that case, the build needs a CI database or the application
+# needs to stop performing DB queries during build time.
+# ============================================================
+
+env:
+  DATABASE_URL: "postgresql://localhost:5432/news_project"
+
+  NEXTAUTH_URL: "http://localhost:3000"
+  NEXTAUTH_SECRET: "ci-nextauth-secret"
+
+  GOOGLE_ID: "ci-google-id"
+  GOOGLE_SECRET: "ci-google-secret"
+
+  GOOGLE_GEMINI_API: "ci-gemini-api"
+  NEWS_API: "ci-news-api"
+
+  UPSTASH_REDIS_REST_URL: "https://localhost:8080"
+  UPSTASH_REDIS_REST_TOKEN: "ci-redis-token"
+
+
+# ============================================================
+# JOBS
+# ============================================================
+
 jobs:
-  checks:
+
+
+  # ==========================================================
+  # QUALITY JOB
+  # ==========================================================
+  #
+  # Checks:
+  #   1. ESLint
+  #   2. TypeScript
+  #   3. Moderate dependency vulnerabilities
+  #
+  # This job does NOT deploy anything.
+  # ==========================================================
+
+  quality:
+
     runs-on: ubuntu-latest
-    env:
-      DATABASE_URL: "postgresql://localhost:5432/news_project"
-      NEXTAUTH_URL: "http://localhost:3000"
-      NEXTAUTH_SECRET: "ci-nextauth-secret"
-      GOOGLE_ID: "ci-google-id"
-      GOOGLE_SECRET: "ci-google-secret"
-      GOOGLE_GEMINI_API: "ci-gemini-api"
-      NEWS_API: "ci-news-api"
-      UPSTASH_REDIS_REST_URL: "https://localhost:8080"
-      UPSTASH_REDIS_REST_TOKEN: "ci-redis-token"
+    timeout-minutes: 15
 
     steps:
+
+      # --------------------------------------------------------
+      # Checkout repository
+      # --------------------------------------------------------
+      #
+      # persist-credentials: false prevents GitHub's default
+      # credentials from being persisted inside the checkout.
+      # This reduces unnecessary credential exposure.
+      # --------------------------------------------------------
+
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+
+      # --------------------------------------------------------
+      # Install Node.js
+      # --------------------------------------------------------
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
+          node-version: "22"
+
+          # Cache npm's dependency cache to make subsequent
+          # workflow runs faster.
+          cache: "npm"
+
+
+      # --------------------------------------------------------
+      # Install exact dependencies
+      # --------------------------------------------------------
+      #
+      # npm ci uses package-lock.json exactly.
+      # This is preferred over npm install in CI because it
+      # produces reproducible dependency installations.
+      # --------------------------------------------------------
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Type check
-        run: npx tsc --noEmit
 
-      - name: Lint
+      # --------------------------------------------------------
+      # Lint
+      # --------------------------------------------------------
+
+      - name: Run linting
         run: npm run lint
 
-      - name: Test
-        run: npm test
 
-      - name: Build
+      # --------------------------------------------------------
+      # TypeScript validation
+      # --------------------------------------------------------
+      #
+      # --noEmit means TypeScript only checks the code.
+      # It does not generate JavaScript output.
+      # --------------------------------------------------------
+
+      - name: Run type checking
+        run: npx tsc --noEmit
+
+
+      # --------------------------------------------------------
+      # Dependency vulnerability scan
+      # --------------------------------------------------------
+      #
+      # moderate or higher vulnerabilities cause the job to fail.
+      # --------------------------------------------------------
+
+      - name: Run security scan
+        run: npm audit --audit-level=moderate
+
+
+  # ==========================================================
+  # TEST JOB
+  # ==========================================================
+  #
+  # Tests run against both Node.js 20 and Node.js 22.
+  #
+  # This verifies that the application behaves correctly on
+  # both supported Node versions.
+  # ==========================================================
+
+  test:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+
+      # Run the same job twice:
+      #
+      # Node 20
+      # Node 22
+      #
+      # GitHub creates a separate runner for each version.
+      matrix:
+        node-version:
+          - 20
+          - 22
+
+    steps:
+
+      # --------------------------------------------------------
+      # Checkout source code
+      # --------------------------------------------------------
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+
+      # --------------------------------------------------------
+      # Install the Node.js version selected by the matrix
+      # --------------------------------------------------------
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+
+      # --------------------------------------------------------
+      # Install dependencies
+      # --------------------------------------------------------
+
+      - name: Install dependencies
+        run: npm ci
+
+
+      # --------------------------------------------------------
+      # Run unit/integration tests
+      # --------------------------------------------------------
+
+      - name: Run unit tests
+        run: npm run test:ci
+
+
+      # --------------------------------------------------------
+      # Upload test results
+      # --------------------------------------------------------
+      #
+      # if: always() means this step runs even when the tests
+      # themselves fail.
+      #
+      # This is useful because failing tests may generate reports
+      # that need to be inspected afterward.
+      # --------------------------------------------------------
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.node-version }}
+          path: test-results/
+
+          # Do not fail this step simply because the folder
+          # doesn't exist.
+          if-no-files-found: ignore
+
+          # Keep test artifacts for 7 days.
+          retention-days: 7
+
+
+      # --------------------------------------------------------
+      # Generate coverage badge files
+      # --------------------------------------------------------
+      #
+      # This is executed even if tests fail so that any generated
+      # coverage information is still preserved.
+      # --------------------------------------------------------
+
+      - name: Generate coverage report
+        if: always()
+        run: |
+          npm install -g jest-coverage-badges
+
+          generate-coverage-badges \
+            --input coverage \
+            --output coverage/badges
+
+
+      # --------------------------------------------------------
+      # Upload coverage files
+      # --------------------------------------------------------
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.node-version }}
+          path: coverage/
+          if-no-files-found: ignore
+          retention-days: 7
+
+
+  # ==========================================================
+  # BUILD JOB
+  # ==========================================================
+  #
+  # Build only happens after BOTH:
+  #
+  #   quality
+  #   test
+  #
+  # succeed.
+  #
+  # This means the application isn't considered deployable unless
+  # linting, type checking and tests have passed.
+  # ==========================================================
+
+  build:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    # Wait for both quality and test jobs.
+    needs:
+      - quality
+      - test
+
+    steps:
+
+      # --------------------------------------------------------
+      # Checkout
+      # --------------------------------------------------------
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+
+      # --------------------------------------------------------
+      # Setup Node.js 22
+      # --------------------------------------------------------
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+
+      # --------------------------------------------------------
+      # Install dependencies
+      # --------------------------------------------------------
+
+      - name: Install dependencies
+        run: npm ci
+
+
+      # --------------------------------------------------------
+      # Generate Prisma Client
+      # --------------------------------------------------------
+      #
+      # Prisma Client must exist before Next.js builds if the
+      # application imports Prisma Client during compilation.
+      #
+      # This does NOT connect to the database.
+      # It only generates the client code.
+      # --------------------------------------------------------
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+
+      # --------------------------------------------------------
+      # Build Next.js
+      # --------------------------------------------------------
+
+      - name: Run production build
         run: npm run build
+
+
+      # --------------------------------------------------------
+      # Upload build output
+      # --------------------------------------------------------
+      #
+      # This is mainly useful for debugging/inspection.
+      # It is NOT what Azure uses for deployment.
+      #
+      # Azure deployment uses the Docker image.
+      # --------------------------------------------------------
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ github.run_number }}
+          path: .next/
+          if-no-files-found: ignore
+          retention-days: 7
+
+
+  # ==========================================================
+  # SECURITY JOB
+  # ==========================================================
+  #
+  # This job performs a stricter HIGH-level npm audit.
+  #
+  # It runs:
+  #
+  #   - when code is pushed to integration-mainline
+  #   - every Monday through the scheduled trigger
+  #
+  # It does not run for pull requests.
+  # ==========================================================
+
+  security:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    if: >
+      github.event_name == 'push' ||
+      github.event_name == 'schedule'
+
+    steps:
+
+      # --------------------------------------------------------
+      # Checkout complete repository history
+      # --------------------------------------------------------
+      #
+      # fetch-depth: 0 downloads full history.
+      # --------------------------------------------------------
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+
+      # --------------------------------------------------------
+      # Setup Node.js
+      # --------------------------------------------------------
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+
+      # --------------------------------------------------------
+      # Install exact dependencies
+      # --------------------------------------------------------
+
+      - name: Install dependencies
+        run: npm ci
+
+
+      # --------------------------------------------------------
+      # Fail if HIGH or CRITICAL vulnerabilities are found.
+      # --------------------------------------------------------
+
+      - name: Check for dependency vulnerabilities
+        run: npm audit --audit-level=high
+
+
+      # --------------------------------------------------------
+      # Generate complete JSON audit report
+      # --------------------------------------------------------
+      #
+      # `|| true` prevents this step itself from stopping the job.
+      #
+      # The previous npm audit step already enforces the security
+      # threshold. This step exists only to save the report.
+      # --------------------------------------------------------
+
+      - name: Generate security report
+        if: always()
+        run: |
+          npm audit --json > security-audit.json || true
+
+
+      # --------------------------------------------------------
+      # Upload JSON report
+      # --------------------------------------------------------
+
+      - name: Upload security report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report-${{ github.run_number }}
+          path: security-audit.json
+          if-no-files-found: ignore
+          retention-days: 30

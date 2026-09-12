@@ -9,7 +9,6 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-.idea/
 
 # testing
 /coverage
@@ -42,4 +41,27 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
-.idea
+
+# IDE
+.idea/
+.vscode/
+
+# opencode / agents
+.opencode/
+.agents/
+.refact/
+
+# skills (local copies)
+.skills/
+
+# docker
+.docker/
+
+# turbo
+.turbo/
+
+# logs
+*.log
+
+# OS
+Thumbs.db

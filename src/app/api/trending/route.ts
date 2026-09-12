@@ -47,7 +47,7 @@ export const GET = async (req: Request) => {
     const newsArr = top_news.flatMap((item: { news?: Array<{ sentiment?: number }> }) => item.news || []);
 
     //filter with positive sentiment
-    const filteredNews = newsArr.filter((item) => (item.sentiment ?? 0) > 0);
+    const filteredNews = newsArr.filter((item: { sentiment?: number }) => (item.sentiment ?? 0) > 0);
     const resultArticles = filteredNews.slice(0, 20); //limiting the response
 
     const result = {
